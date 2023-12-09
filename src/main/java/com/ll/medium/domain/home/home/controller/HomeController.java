@@ -12,4 +12,9 @@ public class HomeController {
     public String showMain(){
         return "domain/home/home/main";
     }
+
+    @GetMapping("/1")
+    public String showMain1(){
+        return "global/baseLayout";
+    }
 }
