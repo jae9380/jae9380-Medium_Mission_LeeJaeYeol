@@ -1,5 +1,12 @@
 <title>회원가입</title>
 
+<script>
+const urlParams = getUrlParams(location.href);
+if (urlParams.msg) {
+    alert(urlParams.msg);
+}
+</script>
+
 <h1 class="font-bold mb-2"><i class="fa-solid fa-user-plus"></i> 회원가입</h1>
 <hr>
 <form th:action class="flex flex-col gap-4" method="POST" onsubmit="submitJoinForm(this); return false;">
@@ -21,6 +28,7 @@
     <button class="btn btn-primary btn-block" type="submit">
         <i class="fa-solid fa-user-plus"></i> 회원가입
     </button>
+
 </form>
 <script>
     function submitJoinForm(form) {

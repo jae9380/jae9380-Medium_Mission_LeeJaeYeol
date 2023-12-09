@@ -2,6 +2,7 @@ package com.ll.medium.domain.member.member.controller;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
+import com.ll.medium.global.rq.Rq;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
+    private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
@@ -27,8 +29,11 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     String join(@Valid JoinForm joinForm) {
-        Member member = memberService.join(joinForm.username,joinForm.password);
-        return"domain/member/member/join" ;
+        Member member = memberService.join(joinForm);
+        if (member==null){
+            return rq.historyBack("이미 존재하는 회원입니다.");
+        }
+        return "redirect:/";
     }
 
     @Data
