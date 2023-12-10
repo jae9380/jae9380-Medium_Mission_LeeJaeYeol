@@ -26,6 +26,12 @@
 <link rel="stylesheet" href="/resource/global/global.css">
 <th:block layout:fragment="content"></th:block>
 <script>
+    $(window).bind("pageshow", function (event) {
+        if (sessionStorage.getItem("historyBackErrorMsg")) {
+            toastError(sessionStorage.getItem("historyBackErrorMsg"));
+            sessionStorage.removeItem("historyBackErrorMsg");
+        }
+    });
     if (urlParams.msg) {
         toastSuccess(urlParams.msg);
     }

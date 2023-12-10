@@ -1,5 +1,5 @@
 <script th:inline="javascript">
     const msg = /*[[${msg}]]*/ null;
-    if (msg)toastSuccess(msg)
+    sessionStorage.setItem("historyBackErrorMsg",msg)
     history.back();
 </script>
