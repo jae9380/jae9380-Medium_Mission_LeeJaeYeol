@@ -37,6 +37,12 @@ public class MemberController {
         return rq.redirect("/",joinRs.getMsg());
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/login")
+    String showLogin(){
+        return "domain/member/member/login";
+    }
+
     @Data
     public static class JoinForm {
         @NotBlank
