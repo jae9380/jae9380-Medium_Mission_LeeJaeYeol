@@ -33,7 +33,8 @@ public class MemberController {
         if (member==null){
             return rq.historyBack("이미 존재하는 회원입니다.");
         }
-        return "redirect:/";
+        long id = member.getId();
+        return "redirect:/?msg=No %d member joined.".formatted(id);
     }
 
     @Data
