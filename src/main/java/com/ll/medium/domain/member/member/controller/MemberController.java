@@ -52,4 +52,12 @@ public class MemberController {
         @NotBlank
         private String passwordConfirm;
     }
+
+    @Data
+    public static class loginForm{
+        @NotBlank
+        private String username;
+        @NotBlank
+        private String password;
+    }
 }
