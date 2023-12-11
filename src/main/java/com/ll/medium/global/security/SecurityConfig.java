@@ -7,6 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Configuration
 public class SecurityConfig {
     @Bean
@@ -31,7 +34,8 @@ public class SecurityConfig {
                 ).formLogin(
                         formLogin -> formLogin
                                 .loginPage("/member/login")
-                                .defaultSuccessUrl("/")
+                                .defaultSuccessUrl("/?infoMsg=" + URLEncoder.encode("환영합니다.", StandardCharsets.UTF_8))
+                                .failureUrl("/member/login?warningMsg=" + URLEncoder.encode("아이디 또는 비밀번호가 틀렸습니다.", StandardCharsets.UTF_8))
                 );
 
         return http.build();

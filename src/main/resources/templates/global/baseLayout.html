@@ -32,8 +32,17 @@
             sessionStorage.removeItem("historyBackErrorMsg");
         }
     });
-    if (urlParams.msg) {
-        toastSuccess(urlParams.msg);
+    if (urlParams.infoMsg) {
+        toastInfo(urlParams.infoMsg);
+    }
+    if (urlParams.successMsg) {
+        toastSuccess(urlParams.successMsg);
+    }
+    if (urlParams.warningMsg) {
+        toastWarning(urlParams.warningMsg);
+    }
+    if (urlParams.errorMsg) {
+        toastError(urlParams.errorMsg);
     }
 </script>
 </body>
