@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post>findTop30ByIsPublishedOrderByIdDesc(boolean isPublished);
+
+    List<Post> findByIsPublishedOrderByIdDesc(boolean isPublished);
 }

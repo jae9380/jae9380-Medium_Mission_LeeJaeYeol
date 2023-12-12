@@ -26,4 +26,8 @@ public class PostService {
         return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
     }
 
+    public Object findByIsPublishedOrderByIdDesc(boolean isPublished){
+        return postRepository.findByIsPublishedOrderByIdDesc(isPublished);
+    }
+
 }
