@@ -16,12 +16,14 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void write(Member author, String title, String body, boolean isPublished){
+    public Post write(Member author, String title, String body, boolean isPublished){
         Post post = Post.builder()
                 .author(author).title(title)
                 .body(body).isPublished(isPublished)
                 .build();
         postRepository.save(post);
+
+        return post;
     }
 
     public Object findTop30ByIsPublishedOrderByIdDesc(boolean isPublished) {
