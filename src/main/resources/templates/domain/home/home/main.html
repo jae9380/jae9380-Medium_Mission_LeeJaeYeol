@@ -4,6 +4,11 @@
 </head>
 <body>
 <div layout:fragment="content">
-    홈
+    <h2>최근 게시글</h2>
+    <ul>
+        <li th:each="post : ${posts}">
+            <a href="" th:text="${post.title}"></a>
+        </li>
+    </ul>
 </div>
 </body>

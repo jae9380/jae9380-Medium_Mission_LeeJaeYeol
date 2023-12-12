@@ -78,4 +78,8 @@ public class Rq {
                 .stream()
                 .anyMatch(it -> it.getAuthority().equals("ROLE_ADMIN"));
     }
+
+    public void setAttribute(String key,Object value){
+        req.setAttribute(key, value);
+    }
 }
