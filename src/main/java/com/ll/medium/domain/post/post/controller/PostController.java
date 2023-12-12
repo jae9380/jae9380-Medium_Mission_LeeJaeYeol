@@ -3,6 +3,7 @@ package com.ll.medium.domain.post.post.controller;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,5 +32,11 @@ public class PostController {
     public String showPost(@PathVariable long id){
         rq.setAttribute("post",postService.findById(id).get());
         return "domain/post/post/detail";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/write")
+    public String showWrite(){
+        return "domain/post/post/write";
     }
 }
