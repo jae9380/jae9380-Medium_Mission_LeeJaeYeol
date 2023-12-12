@@ -30,4 +30,8 @@ public class PostService {
         return postRepository.findByIsPublishedOrderByIdDesc(isPublished);
     }
 
+    public Object findByAuthor(Member author){
+        return postRepository.findByAuthor(author);
+    }
+
 }

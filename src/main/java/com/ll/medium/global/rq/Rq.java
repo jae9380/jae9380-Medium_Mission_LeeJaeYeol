@@ -3,6 +3,7 @@ package com.ll.medium.global.rq;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.rsData.RsData;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,16 @@ public class Rq {
     private final MemberService memberService;
     private User user;
     private Member member;
+
+    @PostConstruct
+    public void init() {
+        // 현재 로그인한 회원의 인증정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            this.user = (User) authentication.getPrincipal();
+        }
+    }
 
     public String redirect(String url, String msg) {
         msg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
@@ -81,5 +92,20 @@ public class Rq {
 
     public void setAttribute(String key,Object value){
         req.setAttribute(key, value);
+    }
+
+    private String getMemberUsername() {
+        return user.getUsername();
+    }
+
+    public Member getMember() {
+        if (!isLogin()) {
+            return null;
+        }
+
+        if (member == null)
+            member = memberService.findByUsername(getMemberUsername()).get();
+
+        return member;
     }
 }
