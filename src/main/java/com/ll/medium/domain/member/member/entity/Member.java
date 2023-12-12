@@ -31,7 +31,7 @@ public class Member {
 
     public List<SimpleGrantedAuthority> getAuthorities() {
         if (isAdmin()) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("ROLE_MEMBER"));
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
         return List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));

@@ -6,12 +6,16 @@ import com.ll.medium.global.rsData.RsData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @RequestScope
 @Component
@@ -44,31 +48,34 @@ public class Rq {
         return "global/historyBack";
     }
 
-    public String historyBack(RsData<?> rs) {
-        return historyBack(rs.getMsg());
-    }
-
-
-    public boolean isLogined() {
-        return user != null;
-    }
-
-    private String getMemberUsername() {
-        return user.getUsername();
-    }
-
-    public Member getMember() {
-        if (!isLogined()) {
-            return null;
-        }
-
-        if (member == null) member = memberService.findByUsername(getMemberUsername()).get();
-
-        return member;
-    }
-
     public String redirectOrBack(String url, RsData<?> rs) {
-        if (rs.isFail()) return historyBack(rs);
+        if (rs.isFail()) return historyBack(rs.getMsg());
         return redirect(url, rs);
+    }
+
+    public User getUser() {
+        return Optional.ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .map(Authentication::getPrincipal)
+                .filter(it -> it instanceof User)
+                .map(it -> (User) it)
+                .orElse(null);
+    }
+
+    public boolean isLogin() {
+        return getUser() != null;
+    }
+
+    public boolean isLogout() {
+        return !isLogin();
+    }
+
+    public boolean isAdmin() {
+        if (isLogout()) return false;
+
+        return getUser()
+                .getAuthorities()
+                .stream()
+                .anyMatch(it -> it.getAuthority().equals("ROLE_ADMIN"));
     }
 }

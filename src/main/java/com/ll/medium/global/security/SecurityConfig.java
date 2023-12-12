@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +19,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(authorizeRequests ->
-                        authorizeRequests.requestMatchers("/**")
+                        authorizeRequests
+                                .requestMatchers("/gen/**")
+                                .permitAll()
+                                .requestMatchers("/resource/**")
+                                .permitAll()
+                                .requestMatchers("/h2-console/**")
+                                .permitAll()
+                                .requestMatchers("/adm/**")
+                                .hasRole("ADMIN")
+                                .anyRequest()
                                 .permitAll()
                 )
                 .headers(
@@ -38,6 +48,10 @@ public class SecurityConfig {
                                 .loginPage("/member/login")
                                 .defaultSuccessUrl("/?infoMsg=" + URLEncoder.encode("환영합니다.", StandardCharsets.UTF_8))
                                 .failureUrl("/member/login?warningMsg=" + URLEncoder.encode("아이디 또는 비밀번호가 틀렸습니다.", StandardCharsets.UTF_8))
+
+                ).logout(
+                        logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                 );
 
         return http.build();

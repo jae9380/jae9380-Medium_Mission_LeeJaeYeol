@@ -1,4 +1,4 @@
-- [ ]  필수미션 1 : 회원기능   
+- [x]  필수미션 1 : 회원기능   
     - [X] 가입
       - [x] GET /member/join : 가입 폼
       - [x] POST /member/join : 가입 폼 처리
@@ -7,8 +7,8 @@
      - [x] GET /member/login : 로그인 폼
      - [x] POST /member/login : 로그인 폼 처리
 
-   - [ ] 로그아웃
-     - [ ] POST /member/logout : 로그아웃
+   - [x] 로그아웃
+     - [x] POST /member/logout : 로그아웃
 
 >   #### 회원가입 폼  
 >   - username
