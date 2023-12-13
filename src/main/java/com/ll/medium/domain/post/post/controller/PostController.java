@@ -61,7 +61,7 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{id}/modify")
+    @PutMapping("/{id}/modify")
     public String modify(@PathVariable long id, @Valid ModifyForm modifyForm){
         Post post=postService.findById(id).get();
         if (!postService.canModify(rq.getMember(),post)) throw new RuntimeException("수정권한이 없습니다.");
