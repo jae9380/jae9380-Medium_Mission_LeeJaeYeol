@@ -1,6 +1,7 @@
 package com.ll.medium.domain.post.post.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.post.post.controller.PostController;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,17 @@ public class PostService {
 
     public Optional<Post> findById(long id) {
         return postRepository.findById(id);
+    }
+
+    public boolean canModify(Member member, Post post) {
+        if (member==null)return false;
+        return post.getAuthor().equals(member);
+    }
+
+    @Transactional
+    public void modify(Post post, PostController.ModifyForm modifyForm) {
+    post.setTitle(modifyForm.getTitle());
+    post.setBody(modifyForm.getBody());
+    post.setPublished(modifyForm.isPublished());
     }
 }

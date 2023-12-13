@@ -9,10 +9,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/post")
@@ -49,7 +46,27 @@ public class PostController {
     @PostMapping("/write")
     public String write(@Valid WriteForm writeForm){
         Post post = postService.write(rq.getMember(),writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished());
-        return rq.redirect("/","%d번 게시글 작성을 완료했습니다.");
+        return rq.redirect("/","%d번 게시글 작성을 완료했습니다.".formatted(post.getId()));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/modify")
+    public String showModify(@PathVariable long id){
+        Post post=postService.findById(id).get();
+
+        if (!postService.canModify(rq.getMember(),post)) rq.redirect("/","수정 권한이 없습니다.");
+        rq.setAttribute("post",post);
+
+        return "domain/post/post/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/modify")
+    public String modify(@PathVariable long id, @Valid ModifyForm modifyForm){
+        Post post=postService.findById(id).get();
+        if (!postService.canModify(rq.getMember(),post)) throw new RuntimeException("수정권한이 없습니다.");
+        postService.modify(post,modifyForm);
+        return rq.redirect("/","%d번 게시물 수정되었습니다.".formatted(id));
     }
 
     @Data
@@ -60,5 +77,15 @@ public class PostController {
         private String body;
         private boolean published;
     }
+
+    @Data
+    public static class ModifyForm {
+        @NotBlank
+        private String title;
+        @NotBlank
+        private String body;
+        private boolean published;
+    }
+
 
 }
