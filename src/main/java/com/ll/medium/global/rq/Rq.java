@@ -108,4 +108,9 @@ public class Rq {
 
         return member;
     }
+
+    public Member getMember(String username){
+        member=memberService.findByUsername(username).get();
+        return member;
+    }
 }

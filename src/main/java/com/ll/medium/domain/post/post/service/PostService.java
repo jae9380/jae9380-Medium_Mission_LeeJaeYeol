@@ -39,8 +39,16 @@ public class PostService {
         return postRepository.findByAuthor(author);
     }
 
+    public Object findByIsPublishedAndAuthor(boolean isPublished,Member author){
+        return postRepository.findByIsPublishedAndAuthor(isPublished,author);
+    }
+
     public Optional<Post> findById(long id) {
         return postRepository.findById(id);
+    }
+
+    public Optional<Post> findByIsPublishedAndId(boolean isPublished,long id) {
+        return postRepository.findByIsPublishedAndId(true,id);
     }
 
     public boolean canModify(Member member, Post post) {
