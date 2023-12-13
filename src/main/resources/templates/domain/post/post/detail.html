@@ -18,6 +18,17 @@
             <label class="text-3xl font-bold tracking-tight text-gray-900"> 내용 </label>
             <span th:text="${post.body}"></span>
     </div>
+
+    <div>
+        <form th:if="${@postService.canModify(@rq.member, post)}" th:action="|/post/${post.id}/modify|" >
+            <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">수정</button>
+        </form>
+
+        <form th:if="${@postService.canDelete(@rq.member, post)}" th:action="|/post/${post.id}/delete|" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button class="btn btn-primary" type="submit" onclick="return confirm('정말로 삭제하시겠습니까?');" aria-describedby="submitHelp">삭제</button>
+        </form>
+    </div>
 </div>
 </body>
 

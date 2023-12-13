@@ -69,6 +69,15 @@ public class PostController {
         return rq.redirect("/","%d번 게시물 수정되었습니다.".formatted(id));
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}/delete")
+    public String delete(@PathVariable long id){
+        Post post = postService.findById(id).get();
+        if (!postService.canDelete(rq.getMember(),post))throw new RuntimeException("삭제 권한이 없습니다.");
+        postService.delete(post);
+        return rq.redirect("/","%d번 글이 삭제되었습니다.".formatted(id));
+    }
+
     @Data
     public static class WriteForm{
         @NotBlank
