@@ -5,6 +5,9 @@ import com.ll.medium.domain.post.post.controller.PostController;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +44,9 @@ public class PostService {
         return postRepository.findByAuthor(author);
     }
 
-    public Object findByIsPublishedAndAuthor(boolean isPublished,Member author){
-        return postRepository.findByIsPublishedAndAuthor(isPublished,author);
+    public Page<Post> findByIsPublishedAndAuthor(boolean isPublished,Member author, int page){
+        Pageable pageable = PageRequest.of(page,10);
+        return postRepository.findByIsPublishedAndAuthor(isPublished,author,pageable);
     }
 
     public Optional<Post> findById(long id) {
@@ -76,4 +80,6 @@ public class PostService {
     public void delete(Post post) {
         postRepository.delete(post);
     }
+
+//    public Page<Post> get
 }

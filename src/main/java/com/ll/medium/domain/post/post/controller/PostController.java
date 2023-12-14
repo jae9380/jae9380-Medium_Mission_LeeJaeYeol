@@ -1,5 +1,6 @@
 package com.ll.medium.domain.post.post.controller;
 
+import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
@@ -13,24 +14,25 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/post")
 public class PostController {
     private final PostService postService;
     private final Rq rq;
 
-    @GetMapping("/post/list")
+    @GetMapping("list")
     public String showList(){
         rq.setAttribute("posts",postService.findByIsPublishedOrderByIdDesc(true));
         return "domain/post/post/list";
     }
 
-    @GetMapping("/post/myList")
+    @GetMapping("/myList")
     public String showMyList(){
         rq.setAttribute("posts",postService.findByAuthor(rq.getMember()));
         return "domain/post/post/myList";
     }
 
-    @GetMapping({"/post/{id}","/b/{username}/{id}"})
-    public String showPost(@PathVariable(required = false) String username, @PathVariable long id){
+    @GetMapping("/{id}")
+    public String showPost( @PathVariable long id){
         Post post = postService.findById(id).get();
         if (!post.isPublished()){
             if (postService.canModify(rq.getMember(),post)){
@@ -44,20 +46,21 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/post/write")
+    @GetMapping("/write")
     public String showWrite(){
         return "domain/post/post/write";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/post/write")
+    @PostMapping("/write")
     public String write(@Valid WriteForm writeForm){
-        Post post = postService.write(rq.getMember(),writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished());
+        Member member=this.rq.getMember();
+        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished());
         return rq.redirect("/","%d번 게시글 작성을 완료했습니다.".formatted(post.getId()));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/post/{id}/modify")
+    @GetMapping("/{id}/modify")
     public String showModify(@PathVariable long id){
         Post post=postService.findById(id).get();
 
@@ -68,7 +71,7 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/post/{id}/modify")
+    @PutMapping("/{id}/modify")
     public String modify(@PathVariable long id, @Valid ModifyForm modifyForm){
         Post post=postService.findById(id).get();
         if (!postService.canModify(rq.getMember(),post)) throw new RuntimeException("수정권한이 없습니다.");
@@ -77,20 +80,13 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/post/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public String delete(@PathVariable long id){
         Post post = postService.findById(id).get();
         if (!postService.canDelete(rq.getMember(),post))throw new RuntimeException("삭제 권한이 없습니다.");
         postService.delete(post);
         return rq.redirect("/","%d번 글이 삭제되었습니다.".formatted(id));
     }
-
-    @GetMapping("/b/{username}")
-    public String showListByUser(@PathVariable String username){
-        rq.setAttribute("posts",postService.findByIsPublishedAndAuthor(true,rq.getMember(username)));
-        return "domain/post/post/listbyusername";
-    }
-
 
     @Data
     public static class WriteForm{
@@ -109,6 +105,4 @@ public class PostController {
         private String body;
         private boolean published;
     }
-
-
 }

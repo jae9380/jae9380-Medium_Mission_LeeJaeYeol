@@ -1,8 +1,7 @@
 package com.ll.medium.domain.member.member.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.ll.medium.domain.post.post.entity.Post;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,6 +27,8 @@ public class Member {
     private String username,password;
     @CreatedDate
     private LocalDateTime createDate;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Post> posts;
 
     public boolean isAdmin() {
         return username.equals("admin");
