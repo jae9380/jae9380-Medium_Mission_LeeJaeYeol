@@ -32,10 +32,11 @@ public class PostController {
     @GetMapping({"/post/{id}","/b/{username}/{id}"})
     public String showPost(@PathVariable(required = false) String username, @PathVariable long id){
         Post post = postService.findById(id).get();
-
         if (!post.isPublished()){
-            if (!postService.canModify(rq.getMember(),post)){
-                throw new RuntimeException("열람 권한이 없습니다.");
+            if (postService.canModify(rq.getMember(),post)){
+                post=postService.findById(id).get();
+            }else {
+             return rq.redirect("/","열람권한이 없습니다.");
             }
         }
             rq.setAttribute("post",post);
@@ -90,11 +91,6 @@ public class PostController {
         return "domain/post/post/listbyusername";
     }
 
-//    @GetMapping("/b/{username}/{id}")
-//    public String showDetailByUser(@PathVariable String username){
-//        rq.setAttribute("posts",postService.findByIsPublishedAndAuthor(true,rq.getMember(username)));
-//        return "domain/post/post/listbyusername";
-//    }
 
     @Data
     public static class WriteForm{

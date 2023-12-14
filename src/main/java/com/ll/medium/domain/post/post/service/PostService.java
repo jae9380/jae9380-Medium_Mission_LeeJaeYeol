@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -21,6 +22,7 @@ public class PostService {
         Post post = Post.builder()
                 .author(author).title(title)
                 .body(body).isPublished(isPublished)
+                .createDate(LocalDateTime.now())
                 .build();
         postRepository.save(post);
 
@@ -61,6 +63,7 @@ public class PostService {
     post.setTitle(modifyForm.getTitle());
     post.setBody(modifyForm.getBody());
     post.setPublished(modifyForm.isPublished());
+    post.setModifyDate(LocalDateTime.now());
     }
 
     public boolean canDelete(Member member, Post post) {

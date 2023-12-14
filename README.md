@@ -40,9 +40,9 @@
 
   - [x] 글 삭제 -  DELETE /post/1/delete : 1번 글 삭제
 
-  - [ ] 특정 회원의 글 모아보기
-    - [ ] GET /b/user1 : 회원 user1 의 전체 글 리스트
-    - [ ] GET /b/user1/3 : 회원 user1 의 글 중에서 3번글 상세보기
+  - [x] 특정 회원의 글 모아보기
+    - [x] GET /b/user1 : 회원 user1 의 전체 글 리스트
+    - [x] GET /b/user1/3 : 회원 user1 의 글 중에서 3번글 상세보기
 
 
 >글 쓰기 폼

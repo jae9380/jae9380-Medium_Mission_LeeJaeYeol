@@ -4,8 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -24,6 +26,8 @@ public class Member {
     @EqualsAndHashCode.Include
     private Long id;
     private String username,password;
+    @CreatedDate
+    private LocalDateTime createDate;
 
     public boolean isAdmin() {
         return username.equals("admin");

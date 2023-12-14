@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,7 @@ public class MemberService {
         Member member = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
+                .createDate(LocalDateTime.now())
                 .build();
         memberRepository.save(member);
         return RsData.of("200","회원가입 성공!.".formatted(member.getUsername()),member);
