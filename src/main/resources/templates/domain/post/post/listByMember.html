@@ -25,40 +25,10 @@
         </tr>
         </tbody>
     </table>
-    <div th:if="${!posts.isEmpty()}">
-        <div>
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${!posts.hasPrevious} ? 'disabled'">
-                <a class="page-link"
-                   href="javascript:void(0)" th:data-page="${posts.number-1}">
-                    <span>이전</span>
-                </a>
-            </li>
-            <li th:each="page: ${#numbers.sequence(0, posts.totalPages-1)}"
-                th:if="${page >= posts.number-4 and page <= posts.number+4}"
-                th:classappend="${page == posts.number} ? 'active'"
-                class="page-item">
-                <a th:text="${page}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
-            </li>
-            <li class="page-item" th:classappend="${!posts.hasNext} ? 'disabled'">
-                <a class="page-link" href="javascript:void(0)" th:data-page="${posts.number+1}">
-                    <span>다음</span>
-                </a>
-            </li>
-        </ul>
+    <div style="display:flex; justify-content: center; gap:10px;">
+        <a th:each="num : ${#numbers.sequence(0, posts.totalPages - 1)}" th:href="|?page=${num}|" th:text="${num}"></a>
     </div>
 
-</div>
-<script layout:fragment="script" type='text/javascript'>
-    const page_elements = document.getElementsByClassName("page-link");
-    Array.from(page_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            document.getElementById('page').value = this.dataset.page;
-            document.getElementById('searchForm').submit();
-        });
-    });
-
-</script>
 </div>
 </body>
 
