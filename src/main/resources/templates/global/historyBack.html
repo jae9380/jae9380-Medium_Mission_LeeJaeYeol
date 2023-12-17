@@ -1,0 +1,5 @@
+<script th:inline="javascript">
+    const msg = /*[[${msg}]]*/ null;
+    sessionStorage.setItem("historyBackErrorMsg",msg)
+    history.back();
+</script>

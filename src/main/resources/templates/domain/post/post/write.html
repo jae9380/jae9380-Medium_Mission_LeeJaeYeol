@@ -1,0 +1,77 @@
+<html layout:decorate="~{global/layout}">
+<head>
+    <title>글 작성</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">글 작성</h2>
+        </div>
+
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <form class="space-y-6" th:action method="POST" onsubmit="submitLoginForm(this); return false;">
+                <div>
+                    <label for="title" class="block text-sm font-medium leading-6 text-gray-900">제목</label>
+                    <div class="mt-2">
+                        <input id="title" name="title" type="text" placeholder="제목을 입력해주세요."  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="body" class="block text-sm font-medium leading-6 text-gray-900">내용</label>
+                    <div class="mt-2">
+                        <textarea id="body" name="body" spellcheck="true" placeholder="내용을 입력해주세요."  class="block w-full h-[120px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                </div>
+                <div class="inline-flex items-center">
+                    <label for="published" data-ripple-dark="true" class="relative flex cursor-pointer items-center rounded-full p-3">
+                        <input id="published" name="published" type="checkbox" checked class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-indigo-500 checked:bg-indigo-500 checked:before:bg-indigo-500 hover:before:opacity-10"/>
+                        <div class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" stroke-width="1">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </label>
+                    <label for="published" class="mt-px cursor-pointer select-none font-light text-gray-700">
+                        Published
+                    </label>
+                </div>
+
+                <div>
+                    <button class="btn btn-primary btn-block" type="submit">
+                        <i class="fa-solid fa-user-plus text-lg text-white"></i> 작성
+                    </button>
+                </div>
+            </form>
+            <script>
+                function submitLoginForm(form) {
+                    form.title.value = form.title.value.trim();
+                    form.body.value = form.body.value.trim();
+                    const checkbox = form.published;
+                    if (form.title.value.length == 0) {
+                        toastWarning('제목을 입력해주세요.');
+                        form.title.focus();
+                        return;
+                    }
+                    if (form.body.value.length == 0) {
+                        toastWarning('내용을 입력해주세요.');
+                        form.body.focus();
+                        return;
+                    }
+
+                    checkbox.addEventListener('change', function() {
+                        const value = this.checked ? 'true' : 'false';
+
+                    });
+                    form.submit();
+                }
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+
