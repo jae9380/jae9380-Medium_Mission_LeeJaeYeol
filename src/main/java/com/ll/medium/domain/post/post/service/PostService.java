@@ -36,8 +36,9 @@ public class PostService {
         return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
     }
 
-    public Object findByIsPublishedOrderByIdDesc(boolean isPublished){
-        return postRepository.findByIsPublishedOrderByIdDesc(isPublished);
+    public Page<Post> findByIsPublishedOrderByIdDesc(boolean isPublished, int page){
+        Pageable pageable = PageRequest.of(page,10);
+        return postRepository.findByIsPublishedOrderByIdDesc(isPublished,pageable);
     }
 
     public Object findByAuthor(Member author){

@@ -20,8 +20,8 @@ public class PostController {
     private final Rq rq;
 
     @GetMapping("list")
-    public String showList(){
-        rq.setAttribute("posts",postService.findByIsPublishedOrderByIdDesc(true));
+    public String showList( @RequestParam(value = "page",defaultValue = "0")int page){
+        rq.setAttribute("posts",postService.findByIsPublishedOrderByIdDesc(true, page));
         return "domain/post/post/list";
     }
 

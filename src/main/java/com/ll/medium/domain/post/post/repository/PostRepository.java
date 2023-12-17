@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post>findTop30ByIsPublishedOrderByIdDesc(boolean isPublished);
 
-    List<Post> findByIsPublishedOrderByIdDesc(boolean isPublished);
+    Page<Post> findByIsPublishedOrderByIdDesc(boolean isPublished, Pageable pageable);
 
     List<Post> findByAuthor(Member author);
 
