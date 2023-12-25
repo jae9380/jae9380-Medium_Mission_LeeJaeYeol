@@ -16,7 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @Getter
 @Setter
-public class PostCmt extends BaseEntity {
+public class Comment extends BaseEntity {
     @ManyToOne
     private Member member;
     @ManyToOne

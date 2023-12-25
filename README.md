@@ -68,9 +68,14 @@
      - POST /post/{id}/comment/write
    - [x] 댓글 목록
        글 상세페이지 하단 : 5번글에 대한 댓글 작성 폼
-   - [ ] 댓글 수정
+   - [x] 댓글 수정
      - GET /post/5/comment/6/modify : 5번글에 대한 6번 댓글 수점 폼
      - POST /post/5/comment/6/modify : 5번글에 대한 6번 댓글 수점 폼 처리
-
+   - [x] 댓글 삭제
+     - DELETE /post/5/comment/6/delete : 5번글에 대한 6번 댓글 삭제
+ 
 >댓글 작성 폼
+> - body
+
+>댓글 수정 폼
 > - body

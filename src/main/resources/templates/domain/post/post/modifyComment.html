@@ -1,6 +1,6 @@
 <html layout:decorate="~{global/layout}">
 <head>
-    <title th:text="|글 ${post.id}번|">글 목록</title>
+    <title th:text="|글 ${post.id}번의 ${postComment.id}|">댓글 수정</title>
     <style>
         .flex-box{
             display: flex;
@@ -41,9 +41,9 @@
 
     </header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 ">
-            <label class="text-2xl font-bold tracking-tight text-gray-900"> 내용 : </label>
-            <br><br>
-            <span class="text-2xl  tracking-tight text-gray-900 " th:text="${post.body}"></span>
+        <label class="text-2xl font-bold tracking-tight text-gray-900"> 내용 : </label>
+        <br><br>
+        <span class="text-2xl  tracking-tight text-gray-900 " th:text="${post.body}"></span>
     </div>
 
     <div class="flex-box">
@@ -66,39 +66,26 @@
         </form>
     </div>
     <div class="cmt_editor" style="margin-top: 0px;">
-        <label class="text-1xl font-bold tracking-tight text-gray-900"> 댓글 작성 </label>
-        <form th:action="|/post/${post.id}/comment/write|" method="POST">
-            <textarea name="body" cols="30" rows="10" required maxlength="10000" placeholder="댓글 작성..." ></textarea>
+        <label class="text-1xl font-bold tracking-tight text-gray-900"> 댓글 수정 </label>
+        <form th:action method="POST" onsubmit="submitModifyCommentForm(this);return false">
+            <input type="hidden" name="_method" value="PUT">
+            <textarea name="body" cols="30" rows="10" required maxlength="10000" th:text="${postComment.body}" placeholder="댓글 작성..." ></textarea>
             <div class="flex justify-end">
-                <button class="btn btn-primary "> 등록</button>
+                <button class="btn btn-primary " type="submit"> 수정</button>
             </div>
         </form>
     </div>
-    <label class="text-2xl font-bold tracking-tight text-gray-900"> 댓글 목록 </label>
-    <div class="mt-5 mb-4">
-        <ui th:each="postCmt:${post.cmt}" th:id="|postCmt-${postCmt.id}|">
-            <div class="rounded-xl border p-3  shadow-md  bg-white">
-                <div class="flex w-full items-center justify-between border-b pb-3">
-                    <div class="flex items-center space-x-3">
-                         <div class="text-x font-bold text-slate-700"  >
-                             <a th:href="|/b/${postCmt.member.username}|" class="hover:underline" th:text="${postCmt.member.username}"></a>
-                         </div>
-                    </div>
-                    <div class="flex items-center space-x-8">
-                        <div class="text-xs text-neutral-500" th:text="${#temporals.format(postCmt.createDate,'yyyy-MM-dd HH:mm')}"></div>
-                    </div>
-                </div>
-                <div class="mt-2 mb-2">
-                    <div class="mb-3 text-s font-bold" th:text="${postCmt.body}"></div>
-                    <div class="flex justify-end">
-                        <a th:if="${@commentService.canModify(@rq.member,postCmt)}" th:href="|/post/${post.id}/comment/${postCmt.id}/modify|">댓글 수정</a>
-                        <a th:if="${@commentService.canDelete(@rq.member,postCmt)}" th:href="|/post/${post.id}/comment/${postCmt.id}/delete|"
-                           method="DELETE" onclick="return confirm('해당 댓글을 삭제하시겠습니까?')">댓글 삭제</a>
-                    </div>
-                </div>
-            </div>
-        </ui>
-    </div>
 </div>
+<script>
+    function submitModifyCommentForm(form) {
+        form.body.value = form.body.value.trim();
+        if (form.body.value.length == 0) {
+            toastWarning('내용을 입력해주세요.');
+            form.body.focus();
+            return;
+        }
+        form.submit();
+    }
+</script>
 </body>
 
