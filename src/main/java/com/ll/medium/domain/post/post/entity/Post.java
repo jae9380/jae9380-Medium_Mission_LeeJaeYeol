@@ -31,7 +31,7 @@ public class Post extends BaseEntity {
     private String body;
     private boolean isPublished;
 
-    public void like(Member member){
+    public void addLike(Member member){
         if(hasLike(member)) return;
         likes.add(PostLike.builder()
                 .post(this)
@@ -39,7 +39,7 @@ public class Post extends BaseEntity {
                 .build());
     }
 
-    public void cancelLike(Member member){
+    public void deleteLike(Member member){
         likes.removeIf(postLike -> postLike.getMember().equals(member));
     }
 

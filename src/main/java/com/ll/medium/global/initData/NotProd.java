@@ -50,8 +50,10 @@ public class NotProd {
         postService.write(member4,"제목5","내용5",true);
         IntStream.rangeClosed(6,50).forEach(i->{postService.write(member4,"제목"+i,"내용"+i,true);});
         Post post51 = postService.write(member1,"제목51","내용51",true);
-        post51.like(member2);
-        post51.like(member3);
-        post51.like(member2);
+
+        postService.like(member1,post51);
+        postService.like(member2,post51);
+        postService.like(member3,post51);
+        postService.like(member1,post51);
     }
 }

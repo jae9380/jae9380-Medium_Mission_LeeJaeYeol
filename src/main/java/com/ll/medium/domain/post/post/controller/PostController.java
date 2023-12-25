@@ -93,6 +93,30 @@ public class PostController {
         return rq.redirect("/","%d번 글이 삭제되었습니다.".formatted(id));
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/like")
+    public String like(@PathVariable long id){
+        Post post = postService.findById(id).get();
+
+        if (!postService.canLike(rq.getMember(),post))throw new RuntimeException("권한이 없습니다.");
+
+        postService.like(rq.getMember(),post);
+
+        return rq.redirect("/post/"+post.getId(),post.getId()+"번 글 추천했습니다.");
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}/cancelLike")
+    public String cancelLike(@PathVariable long id){
+        Post post = postService.findById(id).get();
+
+        if (!postService.canCancelLike(rq.getMember(),post))throw new RuntimeException("권한이 없습니다.");
+
+        postService.cancelLike(rq.getMember(),post);
+
+        return rq.redirect("/post/"+post.getId(),post.getId()+"번 글 추천 취소했습니다.");
+    }
+
     @Data
     public static class WriteForm{
         @NotBlank

@@ -92,4 +92,24 @@ public class PostService {
     public void delete(Post post) {
         postRepository.delete(post);
     }
+
+    public boolean canLike(Member member, Post post) {
+        if (member==null)return false;
+        return !post.hasLike(member);
+    }
+
+    public boolean canCancelLike(Member member, Post post) {
+        if (member==null)return false;
+        return post.hasLike(member);
+    }
+
+    @Transactional
+    public void like(Member member, Post post) {
+        post.addLike(member);
+    }
+
+    @Transactional
+    public void cancelLike(Member member, Post post) {
+        post.deleteLike(member);
+    }
 }
