@@ -20,14 +20,19 @@ public class PostController {
     private final Rq rq;
 
     @GetMapping("list")
-    public String showList( @RequestParam(value = "page",defaultValue = "0")int page){
-        rq.setAttribute("posts",postService.findByIsPublishedOrderByIdDesc(true, page));
+    public String showList(
+            @RequestParam(value = "kwType",defaultValue = "")String kwType,
+            @RequestParam(defaultValue = "")String kw,
+            @RequestParam(value = "page",defaultValue = "0")int page
+    ){
+
+        rq.setAttribute("posts",postService.search(kwType,kw,page));
         return "domain/post/post/list";
     }
 
     @GetMapping("/myList")
-    public String showMyList(){
-        rq.setAttribute("posts",postService.findByAuthor(rq.getMember()));
+    public String showMyList(@RequestParam(value = "page",defaultValue = "0")int page){
+        rq.setAttribute("posts",postService.findByAuthor(rq.getMember(),page));
         return "domain/post/post/myList";
     }
 

@@ -26,7 +26,6 @@ public class MemberService {
         Member member = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
-                .createDate(LocalDateTime.now())
                 .build();
         memberRepository.save(member);
         return RsData.of("200","회원가입 성공!.".formatted(member.getUsername()),member);

@@ -4,6 +4,7 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.controller.PostController;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
+import com.ll.medium.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -19,13 +19,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
+    private final Rq rq;
 
     @Transactional
     public Post write(Member author, String title, String body, boolean isPublished){
         Post post = Post.builder()
                 .author(author).title(title)
                 .body(body).isPublished(isPublished)
-                .createDate(LocalDateTime.now())
                 .build();
         postRepository.save(post);
 
@@ -36,18 +36,30 @@ public class PostService {
         return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
     }
 
-    public Page<Post> findByIsPublishedOrderByIdDesc(boolean isPublished, int page){
+    public Page<Post> search(String kwType, String kw, int page){
         Pageable pageable = PageRequest.of(page,10);
-        return postRepository.findByIsPublishedOrderByIdDesc(isPublished,pageable);
+        if ("title".equals(kwType)){
+            return postRepository.findByIsPublishedAndTitleContaining(true, kw,pageable);
+        } else if ("body".equals(kwType)) {
+            return postRepository.findByIsPublishedAndBodyContaining(true, kw,pageable);
+        } else if ("authorUsername".equals(kwType)) {
+            Member member=rq.getMember(kw);
+            return postRepository.findByIsPublishedAndAuthor(true,member,pageable);
+        }else if ("titleAndBody".equals(kwType)){
+            return postRepository.findByIsPublishedAndTitleContainingOrBodyContaining(kw,pageable);
+        }else {
+            return postRepository.findByIsPublishedOrderByIdDesc(true, pageable);
+        }
     }
 
-    public Object findByAuthor(Member author){
-        return postRepository.findByAuthor(author);
+    public Page<Post> findByAuthor(Member author,int page){
+        Pageable pageable = PageRequest.of(page,10);
+        return postRepository.findByAuthor(author,pageable);
     }
 
     public Page<Post> findByIsPublishedAndAuthor(boolean isPublished,Member author, int page){
         Pageable pageable = PageRequest.of(page,10);
-        return postRepository.findByIsPublishedAndAuthor(isPublished,author,pageable);
+        return postRepository.findByIsPublishedAndAuthor(true,author,pageable);
     }
 
     public Optional<Post> findById(long id) {
@@ -68,7 +80,6 @@ public class PostService {
     post.setTitle(modifyForm.getTitle());
     post.setBody(modifyForm.getBody());
     post.setPublished(modifyForm.isPublished());
-    post.setModifyDate(LocalDateTime.now());
     }
 
     public boolean canDelete(Member member, Post post) {
@@ -81,6 +92,4 @@ public class PostService {
     public void delete(Post post) {
         postRepository.delete(post);
     }
-
-//    public Page<Post> get
 }
