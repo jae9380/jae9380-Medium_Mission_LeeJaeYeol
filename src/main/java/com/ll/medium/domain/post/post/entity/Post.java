@@ -1,6 +1,7 @@
 package com.ll.medium.domain.post.post.entity;
 
 import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.post.postComment.entity.PostCmt;
 import com.ll.medium.domain.post.postLike.entity.PostLike;
 import com.ll.medium.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
@@ -25,6 +26,9 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy="post", cascade = ALL, orphanRemoval = true)
     @Builder.Default
     private List<PostLike> likes = new ArrayList<>();
+    @OneToMany(mappedBy="post", cascade = ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<PostCmt> cmt = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     private Member author;
     private String title;
@@ -45,5 +49,13 @@ public class Post extends BaseEntity {
 
     public boolean hasLike (Member member){
         return likes.stream().anyMatch(postLike -> postLike.getMember().equals(member));
+    }
+
+    public PostCmt writeCmt(Member member, String body) {
+        PostCmt postCmt = PostCmt.builder()
+                .post(this).member(member)
+                .body(body).build();
+        cmt.add(postCmt);
+        return postCmt;
     }
 }

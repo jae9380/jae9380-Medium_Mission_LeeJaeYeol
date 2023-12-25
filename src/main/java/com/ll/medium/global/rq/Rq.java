@@ -39,6 +39,9 @@ public class Rq {
     }
 
     public String redirect(String url, String msg) {
+        String[] urlBits = url.split("#", 2);
+        url = urlBits[0];
+
         msg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         sb.append("redirect:");
@@ -47,6 +50,11 @@ public class Rq {
             sb.append("?successMsg=");
             sb.append(msg);
         }
+        if (urlBits.length == 2) {
+            sb.append("#");
+            sb.append(urlBits[1]);
+        }
+
         return sb.toString();
     }
 

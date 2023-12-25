@@ -63,3 +63,9 @@
 
 ## 추가 작업
  - [x] 추천
+ - [ ] 댓글
+   - [x] 댓글 작성 
+     - POST /post/{id}/comment/write 
+
+>댓글 작성 폼
+> - body
