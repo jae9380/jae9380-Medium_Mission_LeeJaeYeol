@@ -54,6 +54,18 @@ public class CommentController {
         return rq.redirect("/post/"+id+"#postCmt-"+comment.getId(),"댓글이 수정되었습니다.");
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{commentId}/delete")
+    public String delete(@PathVariable long id,@PathVariable long commentId){
+        Comment comment = commentService.findById(commentId).orElseThrow(()->new RuntimeException("해당 댓글은 없습니다."));
+
+        if(!commentService.canDelete(rq.getMember(),comment)) throw new RuntimeException("권한이 없습니다.");
+
+        commentService.deleteComment(comment);
+
+        return rq.redirect("/post/"+id,commentId+"번 댓글이 삭제되었습니다.");
+    }
+
     @Data
     public static class WriteForm{
         @NotBlank

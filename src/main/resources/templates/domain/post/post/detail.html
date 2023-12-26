@@ -91,9 +91,16 @@
                 <div class="mt-2 mb-2">
                     <div class="mb-3 text-s font-bold" th:text="${postCmt.body}"></div>
                     <div class="flex justify-end">
+                        <form th:if="${@commentService.canDelete(@rq.member,postCmt)}" th:action="|/post/${post.id}/comment/${postCmt.id}/delete|" method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?');" aria-describedby="submitHelp">댓글 삭제</button>
+                        </form>
                         <a th:if="${@commentService.canModify(@rq.member,postCmt)}" th:href="|/post/${post.id}/comment/${postCmt.id}/modify|">댓글 수정</a>
-                        <a th:if="${@commentService.canDelete(@rq.member,postCmt)}" th:href="|/post/${post.id}/comment/${postCmt.id}/delete|"
-                           method="DELETE" onclick="return confirm('해당 댓글을 삭제하시겠습니까?')">댓글 삭제</a>
+
+                        <form th:if="${@commentService.canDelete(@rq.member,postCmt)}" th:action="|/post/${post.id}/comment/${postCmt.id}/delete|" method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?');" aria-describedby="submitHelp">댓글 삭제</button>
+                        </form>
                     </div>
                 </div>
             </div>

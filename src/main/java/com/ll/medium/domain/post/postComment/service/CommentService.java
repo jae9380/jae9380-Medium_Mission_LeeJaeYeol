@@ -42,4 +42,9 @@ public class CommentService {
     public void modifyComment(Comment comment, String body) {
         comment.setBody(body);
     }
+
+    @Transactional
+    public void deleteComment(Comment comment) {
+        commentRepository.delete(comment);
+    }
 }
