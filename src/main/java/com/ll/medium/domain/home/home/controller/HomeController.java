@@ -16,6 +16,7 @@ public class HomeController {
     @GetMapping("/")
     public String showMain(@RequestParam(value = "page",defaultValue = "0")int page){
         page= page>2?2:page;
+
         rq.setAttribute("posts",postService.findTop10ByIsPublishedOrderByIdDesc(true, page));
         return "domain/home/home/main";
     }

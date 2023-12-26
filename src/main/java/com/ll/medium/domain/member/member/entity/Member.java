@@ -23,6 +23,7 @@ public class Member extends BaseEntity {
     private String username,password;
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<Post> posts;
+    private boolean isPaid;
 
     @Transient
     public boolean isAdmin() {
