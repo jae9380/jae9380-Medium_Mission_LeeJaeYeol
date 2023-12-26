@@ -19,6 +19,7 @@ public class BlogController {
 
     @GetMapping("/{username}")
     public String showListByUser(@PathVariable String username, @RequestParam(value = "page",defaultValue = "0")int page){
+        rq.getMember(username);
         rq.setAttribute("posts",postService.findByIsPublishedAndAuthor(true,rq.getMember(username),page
         ));
         return "domain/post/post/listByMember";

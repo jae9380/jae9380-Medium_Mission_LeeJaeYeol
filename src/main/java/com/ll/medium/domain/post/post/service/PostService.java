@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,9 @@ public class PostService {
         return post;
     }
 
-    public Object findTop30ByIsPublishedOrderByIdDesc(boolean isPublished) {
-        return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
+    public Page<Post> findTop10ByIsPublishedOrderByIdDesc(boolean isPublished,int page) {
+        Pageable pageable = PageRequest.of(page,10, Sort.by("id").descending());
+        return postRepository.findTop10ByIsPublishedOrderByIdDesc(isPublished,pageable);
     }
 
     public Page<Post> search(String kwType, String kw, int page){
@@ -53,12 +55,12 @@ public class PostService {
     }
 
     public Page<Post> findByAuthor(Member author,int page){
-        Pageable pageable = PageRequest.of(page,10);
+        Pageable pageable = PageRequest.of(page,10, Sort.by("id").descending());
         return postRepository.findByAuthor(author,pageable);
     }
 
     public Page<Post> findByIsPublishedAndAuthor(boolean isPublished,Member author, int page){
-        Pageable pageable = PageRequest.of(page,10);
+        Pageable pageable = PageRequest.of(page,10, Sort.by("id").descending());
         return postRepository.findByIsPublishedAndAuthor(true,author,pageable);
     }
 
