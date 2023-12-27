@@ -60,7 +60,7 @@ public class PostController {
     @PostMapping("/write")
     public String write(@Valid WriteForm writeForm){
         Member member=this.rq.getMember();
-        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished());
+        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished(),writeForm.isPublished());
         return rq.redirect("/","%d번 게시글 작성을 완료했습니다.".formatted(post.getId()));
     }
 
@@ -124,6 +124,7 @@ public class PostController {
         @NotBlank
         private String body;
         private boolean published;
+        private boolean paid;
     }
 
     @Data
@@ -133,5 +134,6 @@ public class PostController {
         @NotBlank
         private String body;
         private boolean published;
+        private boolean paid;
     }
 }

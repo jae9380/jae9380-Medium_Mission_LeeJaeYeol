@@ -33,6 +33,7 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String body;
     private boolean isPublished;
+    private boolean isPaid;
 
     public void addLike(Member member){
         if(hasLike(member)) return;
