@@ -5,10 +5,12 @@ import com.ll.medium.global.jpa.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -25,17 +27,22 @@ public class Member extends BaseEntity {
     private List<Post> posts;
     private boolean isPaid;
 
-    @Transient
     public boolean isAdmin() {
         return username.equals("admin");
     }
 
-    @Transient
-    public List<SimpleGrantedAuthority> getAuthorities() {
-        if (isAdmin()) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        authorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
+
+        if (List.of("system","admin").contains(username)){
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
-        return List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
+        if (this.isPaid()){
+            authorities.add(new SimpleGrantedAuthority("ROLE_PAID"));
+        }
+        return authorities;
     }
 }

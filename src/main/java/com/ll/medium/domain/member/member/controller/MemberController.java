@@ -30,7 +30,7 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     String join(@Valid JoinForm joinForm) {
-        RsData<Member> joinRs = memberService.join(joinForm.getUsername(),joinForm.getPassword());
+        RsData<Member> joinRs = memberService.join(joinForm.getUsername(),joinForm.getPassword(), joinForm.isPaid());
         if (joinRs.isFail()){
             return rq.historyBack(joinRs.getMsg());
         }
@@ -51,6 +51,8 @@ public class MemberController {
         private String password;
         @NotBlank
         private String passwordConfirm;
+        private boolean isPaid;
+
     }
 
     @Data

@@ -38,10 +38,10 @@ public class NotProd {
 
     @Transactional
     public void work1(){
-        Member member1 = memberService.join("user1","1234").getDat();
-        Member member2 = memberService.join("user2","1234").getDat();
-        Member member3 = memberService.join("user3","1234").getDat();
-        Member member4 = memberService.join("user4","1234").getDat();
+        Member member1 = memberService.join("user1","1234",false).getDat();
+        Member member2 = memberService.join("user2","1234",true).getDat();
+        Member member3 = memberService.join("user3","1234",false).getDat();
+        Member member4 = memberService.join("user4","1234",true).getDat();
 
         postService.write(member1,"제목1","내용1",true);
         postService.write(member2,"제목2","내용2",false);

@@ -19,8 +19,8 @@ public class All {
     public ApplicationRunner initAll() {
         return args -> {
             if (memberService.findByUsername("admin").isPresent() && memberService.findByUsername("system").isPresent()) return;
-            memberService.join("admin", "1234");
-            memberService.join("system", "1234");
+            memberService.join("admin", "1234",true);
+            memberService.join("system", "1234",true);
 
         };
     }

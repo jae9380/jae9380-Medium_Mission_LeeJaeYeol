@@ -28,6 +28,8 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers("/adm/**")
                                 .hasRole("ADMIN")
+                                .requestMatchers("/paid/**")
+                                .hasRole("PAID")
                                 .anyRequest()
                                 .permitAll()
                 )

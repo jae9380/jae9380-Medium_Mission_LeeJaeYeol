@@ -20,4 +20,9 @@ public class HomeController {
         rq.setAttribute("posts",postService.findTop10ByIsPublishedOrderByIdDesc(true, page));
         return "domain/home/home/main";
     }
+
+    @GetMapping("/paid")
+    public String paid(){
+        return "domain/post/paid/detial";
+    }
 }
