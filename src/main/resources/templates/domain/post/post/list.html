@@ -30,11 +30,12 @@
                     <thead class="table-dark">
                     <tr class="text-center">
                         <th>번호</th>
-                        <th style="width: 50%">제목</th>
+                        <th style="width: 40%">제목</th>
                         <th>댓글</th>
                         <th>추천</th>
                         <th>글쓴이</th>
                         <th>작성일시</th>
+                        <td>비고</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -48,6 +49,7 @@
                         <td th:text="${post.likes.size}"></td>
                         <td><a th:if="${post.author != null}" th:text="${post.author.username}" th:href="|/b/${post.author.username}|"></a></td>
                         <td th:text="${#temporals.format(post.createDate,'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${post.isPaid ? '유료' : ''}"></td>
                     </tr>
                     </tbody>
                 </table>

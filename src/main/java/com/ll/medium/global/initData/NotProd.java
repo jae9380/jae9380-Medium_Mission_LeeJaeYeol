@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -48,12 +49,19 @@ public class NotProd {
         postService.write(member3,"제목3","내용3",true,true);
         postService.write(member3,"제목4","내용4",false,false);
         postService.write(member4,"제목5","내용5",true,false);
-        IntStream.rangeClosed(6,50).forEach(i->{postService.write(member4,"제목"+i,"내용"+i,true,false);});
-        Post post51 = postService.write(member1,"제목51","내용51",true,true);
+        Post post6= postService.write(member4,"제목6","내용6",true,false);
 
-        postService.like(member1,post51);
-        postService.like(member2,post51);
-        postService.like(member3,post51);
-        postService.like(member1,post51);
+        Member[] members={member1,member2,member3,member4};
+
+        IntStream.rangeClosed(7,207).forEach(i->{
+            Member randomMember=members[new Random().nextInt(members.length)];
+            boolean randomBoolean=new Random().nextBoolean();
+            postService.write(randomMember,"제목"+i,"내용"+i,true,randomBoolean);
+        });
+
+        postService.like(member1,post6);
+        postService.like(member2,post6);
+        postService.like(member3,post6);
+        postService.like(member1,post6);
     }
 }
