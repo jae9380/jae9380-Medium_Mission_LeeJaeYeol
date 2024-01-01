@@ -13,15 +13,15 @@
                     </div>
                 </div>
                 <div>
-                    <form style="display: flex; justify-content: flex-end; gap: 10px;" id="searchForm1">
-                        <select name="kwType" id="kwType1">
-                            <option value="titleAndBody" >제목+내용</option>
-                            <option value="title">제목</option>
-                            <option value="body" >내용</option>
-                            <option value="authorUsername" >작성자</option>
+                    <form style="display: flex; justify-content: flex-end; gap: 10px;" th:action="@{/post/list}" method="get">
+                        <select name="kwType" id="kwType1" >
+                            <option value="titleAndBody" th:selected="${kwType=='titleAndBody'}" >제목+내용</option>
+                            <option value="title" th:selected="${kwType=='title'}">제목</option>
+                            <option value="body" th:selected="${kwType=='body'}">내용</option>
+                            <option value="authorUsername" th:selected="${kwType=='authorUsername'}">작성자</option>
                         </select>
-                        <input type="search" name="kw" placeholder="검색어" >
-                        <input type="submit" value="검색">
+                        <input type="search" name="kw" placeholder="검색어" th:value="${kw}" >
+                        <button type="submit" id="btn_search">검색</button>
                     </form>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                     </tbody>
                 </table>
                 <div style="display:flex; justify-content: center; gap:10px;">
-                    <a th:each="num : ${#numbers.sequence(0, posts.totalPages - 1)}" th:href="|?page=${num}|" th:text="${num}+1"></a>
+                    <a th:each="num : ${#numbers.sequence(0, posts.totalPages - 1)}" th:href="@{|?page=${num}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"></a>
                 </div>
             </div>
         </div>

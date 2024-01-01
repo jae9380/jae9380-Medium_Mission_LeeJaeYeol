@@ -27,4 +27,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE p.isPublished = true AND (p.title LIKE %:kw% OR p.body LIKE %:kw%)")
     Page<Post> findByIsPublishedAndTitleContainingOrBodyContaining(@Param("kw") String kw, Pageable pageable);
+
+    Page<Post> findByIsPublished(boolean isPublished, Pageable pageable);
+
+    Page<Post> findByIsPublishedAndAuthorUsernameContaining(boolean isPublished, String kw, Pageable pageable);
 }

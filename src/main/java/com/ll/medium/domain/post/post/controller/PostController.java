@@ -25,8 +25,13 @@ public class PostController {
             @RequestParam(defaultValue = "")String kw,
             @RequestParam(value = "page",defaultValue = "0")int page
     ){
-
-        rq.setAttribute("posts",postService.search(kwType,kw,page));
+        if (!kwType.equals("")&&!kw.equals("")){
+            rq.setAttribute("posts",postService.search(kwType,kw,page));
+            rq.setAttribute("kwType",kwType);
+            rq.setAttribute("kw",kw);
+        }else {
+            rq.setAttribute("posts",postService.findByIsPublished(true,page));
+        }
         return "domain/post/post/list";
     }
 
