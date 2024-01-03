@@ -39,19 +39,9 @@ public class PostService {
         return postRepository.findTop10ByIsPublishedOrderByIdDesc(isPublished,pageable);
     }
 
-    public Page<Post> search(String kwType, String kw, int page){
-        Pageable pageable = PageRequest.of(page,10,Sort.by("id").descending());
-        if (kwType.equals("title")){
-            return postRepository.findByIsPublishedAndTitleContaining(true, kw,pageable);
-        } else if (kwType.equals("body")) {
-            return postRepository.findByIsPublishedAndBodyContaining(true, kw,pageable);
-        } else if (kwType.equals("authorUsername")) {
-            return postRepository.findByIsPublishedAndAuthorUsernameContaining(true,kw,pageable);
-        }else if (kwType.equals("titleAndBody")){
-            return postRepository.findByIsPublishedAndTitleContainingOrBodyContaining(kw,pageable);
-        }else {
-            return postRepository.findByIsPublishedOrderByIdDesc(true, pageable);
-        }
+    public Page<Post> search(String kwType, String kw,String sort, int page){
+        Pageable pageable = PageRequest.of(page,10);
+        return postRepository.search(kwType,kw,sort,pageable);
     }
 
     public Page<Post> findByIsPublished(boolean isPublished, int page){
