@@ -119,4 +119,9 @@ public class PostService {
     public void cancelLike(Member member, Post post) {
         post.deleteLike(member);
     }
+
+    @Transactional
+    public void increaseHit(Post post) {
+        post.increaseHit();
+    }
 }

@@ -51,6 +51,7 @@ public class PostController {
              return rq.redirect("/","열람권한이 없습니다.");
             }
         }
+        postService.increaseHit(post);
             rq.setAttribute("post",post);
         return "domain/post/post/detail";
     }
