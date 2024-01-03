@@ -33,6 +33,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 builder.or(post.title.containsIgnoreCase(kw));
                 builder.or(post.body.containsIgnoreCase(kw));
                 break;
+            default:
         }
 
         builder.and(post.isPublished.isTrue());

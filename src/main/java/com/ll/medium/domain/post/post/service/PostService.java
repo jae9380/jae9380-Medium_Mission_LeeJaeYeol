@@ -44,7 +44,8 @@ public class PostService {
         return postRepository.search(kwType,kw,sort,pageable);
     }
 
-    public Page<Post> findByIsPublished(boolean isPublished, int page){
+    public Page<Post> findByIsPublished(String sortCode, int page){
+
         Pageable pageable = PageRequest.of(page, 10, Sort.by("id").descending());
         return postRepository.findByIsPublished(true,pageable);
     }
@@ -92,6 +93,7 @@ public class PostService {
 
     public boolean canLike(Member member, Post post) {
         if (member==null)return false;
+        if (post.isPaid()&&!member.isPaid()) return false;
         return !post.hasLike(member);
     }
 

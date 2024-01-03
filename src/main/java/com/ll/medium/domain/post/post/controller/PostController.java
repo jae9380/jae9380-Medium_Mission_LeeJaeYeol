@@ -26,14 +26,15 @@ public class PostController {
             @RequestParam(value = "sortCode",defaultValue = "idDesc")String sortCode,
             @RequestParam(value = "page",defaultValue = "0")int page
     ){
-        if (sortCode!=null&&!kwType.equals("")&&!kw.equals("")){
-            rq.setAttribute("posts",postService.search(kwType,kw,sortCode,page));
-            rq.setAttribute("sortCode",sortCode);
-            rq.setAttribute("kwType",kwType);
-            rq.setAttribute("kw",kw);
-        }else {
-            rq.setAttribute("posts",postService.findByIsPublished(true,page));
-        }
+
+        rq.setAttribute("posts",postService.search(kwType,kw,sortCode,page));
+        rq.setAttribute("sortCode",sortCode);
+        rq.setAttribute("kwType",kwType);
+        rq.setAttribute("kw",kw);
+
+
+
+
         return "domain/post/post/list";
     }
 

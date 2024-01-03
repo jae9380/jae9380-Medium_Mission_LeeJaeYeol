@@ -87,9 +87,31 @@
                         }
                     </script>
                 </div>
-                <div style="display:flex; justify-content: center; gap:10px;">
-                    <a th:each="num : ${#numbers.sequence(0, posts.totalPages - 1)}" th:href="@{|?page=${num}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"></a>
-                </div>
+                <nav class="flex items-center justify-center mt-3 mb-3">
+                    <ul class="inline-flex -space-x-px">
+                        <li>
+                            <a th:classappend="${posts.number < 5} ? 'disabled' : ''"
+                               th:if="${posts.number >= 5}"
+                               th:href="@{|/post/list?page=${(posts.number-5) > 0 ? (posts.number-5) : 0}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}"
+                               class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">이전 페이지</a>
+                        </li>
+                        <div th:each="num:${#numbers.sequence(0, posts.totalPages - 1)}" th:if="${num >= (posts.number/5)*5 and num < ((posts.number/5)+1)*5}">
+                            <li>
+                                <a th:if="${num == posts.number}" th:href="@{|?page=${num}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"
+                                   class="bg-blue-50 border border-gray-300 text-blue-600 hover:bg-blue-100 hover:text-blue-700  py-2 px-3 dark:border-gray-700 dark:bg-gray-700 dark:text-white"></a>
+                                <a th:unless="${num == posts.number}" th:href="@{|?page=${num}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"
+                                   class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"></a>
+                            </li>
+                        </div>
+
+                        <li>
+                            <a th:classappend="${posts.number + 5 >= posts.totalPages} ? 'disabled' : ''"
+                               th:if="${posts.totalPages > 5 and (posts.number / 5 < (posts.totalPages - 1) / 5)}"
+                               th:href="@{|/post/list?page=${(posts.number / 5 + 1) * 5}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}"
+                               class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">다음 페이지</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
