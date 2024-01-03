@@ -23,10 +23,12 @@ public class PostController {
     public String showList(
             @RequestParam(value = "kwType",defaultValue = "")String kwType,
             @RequestParam(defaultValue = "")String kw,
+            @RequestParam(value = "sortCode",defaultValue = "")String sortCode,
             @RequestParam(value = "page",defaultValue = "0")int page
     ){
         if (!kwType.equals("")&&!kw.equals("")){
             rq.setAttribute("posts",postService.search(kwType,kw,page));
+            rq.setAttribute("sortCode",sortCode);
             rq.setAttribute("kwType",kwType);
             rq.setAttribute("kw",kw);
         }else {

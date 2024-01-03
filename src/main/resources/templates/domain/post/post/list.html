@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <form style="display: flex; justify-content: flex-end; gap: 10px;" th:action="@{/post/list}" method="get">
-                        <select name="kwType" id="kwType1" >
+                        <select name="kwType" id="kwType" >
                             <option value="titleAndBody" th:selected="${kwType=='titleAndBody'}" >제목+내용</option>
                             <option value="title" th:selected="${kwType=='title'}">제목</option>
                             <option value="body" th:selected="${kwType=='body'}">내용</option>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="mt-2 mb-2">
-                <table class="table">
+                <table class="table border-b">
                     <thead class="table-dark">
                     <tr class="text-center">
                         <th>번호</th>
@@ -53,8 +53,40 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="flex w-full items-center justify-end pt-2 pb-2 pr-3">
+                <form th:action="@{/post/list}" method="get" id="sortForm">
+                    <select name="sortCode" id="sortCode" onchange="submitForm()">
+                        <option value="idDesc" th:selected="${sortCode=='idDesc'}">최근 등록 순</option>
+                        <option value="idAsc" th:selected="${sortCode=='idAsc'}">오래된 등록 순</option>
+                        <option value="hitCountDesc" th:selected="${sortCode=='hitCountDesc'}">조회 많은 순</option>
+                        <option value="hitCountAsc" th:selected="${sortCode=='hitCountAsc'}">조회 낮은 순</option>
+                        <option value="likesCountDesc" th:selected="${sortCode=='likesCountDesc'}">추천 높은 순</option>
+                        <option value="likesCountAsc" th:selected="${sortCode=='likesCountAsc'}">추천 낮은 순</option>
+                    </select>
+                </form>
+                    <script>
+                        function submitForm() {
+                            var sortCode = document.getElementById("sortCode").value;
+                            var kwType = document.getElementById("kwType").value;
+                            var kw = document.getElementsByName("kw")[0].value;
+
+                            var currentUrl = window.location.href;
+                            var newUrl = currentUrl.split("?")[0] + "?sortCode=" + sortCode;
+
+                            if (kwType) {
+                                newUrl += "&kwType=" + kwType;
+                            }
+
+                            if (kw) {
+                                newUrl += "&kw=" + kw;
+                            }
+
+                            window.location.href = newUrl;
+                        }
+                    </script>
+                </div>
                 <div style="display:flex; justify-content: center; gap:10px;">
-                    <a th:each="num : ${#numbers.sequence(0, posts.totalPages - 1)}" th:href="@{|?page=${num}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"></a>
+                    <a th:each="num : ${#numbers.sequence(0, posts.totalPages - 1)}" th:href="@{|?page=${num}&sortCode=${sortcode}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"></a>
                 </div>
             </div>
         </div>
