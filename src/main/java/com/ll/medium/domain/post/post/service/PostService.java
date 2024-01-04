@@ -78,6 +78,7 @@ public class PostService {
     post.setTitle(modifyForm.getTitle());
     post.setBody(modifyForm.getBody());
     post.setPublished(modifyForm.isPublished());
+    post.setPaid(modifyForm.isPaid());
     }
 
     public boolean canDelete(Member member, Post post) {

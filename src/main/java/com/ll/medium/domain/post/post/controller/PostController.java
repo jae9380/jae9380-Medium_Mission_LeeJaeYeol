@@ -69,7 +69,7 @@ public class PostController {
     @PostMapping("/write")
     public String write(@Valid WriteForm writeForm){
         Member member=this.rq.getMember();
-        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished(),writeForm.isPublished());
+        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished(),writeForm.isPaid());
         return rq.redirect("/","%d번 게시글 작성을 완료했습니다.".formatted(post.getId()));
     }
 
