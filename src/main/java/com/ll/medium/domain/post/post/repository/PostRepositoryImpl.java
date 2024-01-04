@@ -1,5 +1,6 @@
 package com.ll.medium.domain.post.post.repository;
 
+import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.entity.QPost;
 import com.querydsl.core.BooleanBuilder;
@@ -17,7 +18,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
     @Override
-    public Page<Post> search(String kwTypes, String kw, String sort, Pageable pageable) {
+    public Page<Post> search(String kwTypes, String kw, String sort, Pageable pageable, Member... member) {
         QPost post = QPost.post;
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -37,6 +38,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         }
 
         builder.and(post.isPublished.isTrue());
+
+        if (member.length>0){
+            builder.and(post.author.username.eq(member[0].getUsername()));
+        }
 
         JPAQuery<Post> query = jpaQueryFactory
                 .selectFrom(post)

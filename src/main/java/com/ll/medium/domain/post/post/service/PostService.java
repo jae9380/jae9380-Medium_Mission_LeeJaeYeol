@@ -44,10 +44,10 @@ public class PostService {
         return postRepository.search(kwType,kw,sort,pageable);
     }
 
-    public Page<Post> findByIsPublished(String sortCode, int page){
-
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("id").descending());
-        return postRepository.findByIsPublished(true,pageable);
+    public Page<Post> search(String kwType, String kw,String sort, int page, String username){
+        Member member = rq.getMember(username);
+        Pageable pageable = PageRequest.of(page,10);
+        return postRepository.search(kwType,kw,sort,pageable,member);
     }
 
     public Page<Post> findByAuthor(Member author,int page){

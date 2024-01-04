@@ -9,16 +9,15 @@
             <div class="flex w-full items-center justify-between border-b pb-3">
                 <div class="flex items-center space-x-3">
                     <div class="text-x font-bold text-slate-700"  >
-                        <span class="text-3xl font-bold tracking-tight text-gray-900" th:text="${@rq.getMember.username+'님의 글 목록'}"></span>
+                        <span class="text-3xl font-bold tracking-tight text-gray-900" th:text="${username+'님의 글 목록'}"></span>
                     </div>
                 </div>
                 <div>
                     <form style="display: flex; justify-content: flex-end; gap: 10px;" id="searchForm1">
-                        <select name="kwType" id="kwType1">
+                        <select name="kwType" id="kwType">
                             <option value="titleAndBody" >제목+내용</option>
                             <option value="title">제목</option>
                             <option value="body" >내용</option>
-                            <option value="authorUsername" >작성자</option>
                         </select>
                         <input type="search" name="kw" placeholder="검색어" >
                         <input type="submit" value="검색">
@@ -32,6 +31,7 @@
                         <th>번호</th>
                         <th style="width: 40%">제목</th>
                         <th>댓글</th>
+                        <th>조회</th>
                         <th>추천</th>
                         <th>작성일시</th>
                         <th>비고</th>
@@ -45,15 +45,70 @@
                             <a th:href="@{|/post/${post.id}|}" th:text="${post.title}"></a>
                         </td>
                         <td th:text="${post.cmt.size}"></td>
+                        <td th:text="${post.hit}"></td>
                         <td th:text="${post.likes.size}"></td>
                         <td th:text="${#temporals.format(post.createDate,'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${post.isPaid ? '유료' : ''}"></td>
                     </tr>
                     </tbody>
                 </table>
-                <div style="display:flex; justify-content: center; gap:10px;">
-                    <a th:each="num : ${#numbers.sequence(0, posts.totalPages - 1)}" th:href="|?page=${num}|" th:text="${num}+1"></a>
+                <div class="flex w-full items-center justify-end pt-2 pb-2 pr-3">
+                    <form th:action="@{/post/list}" method="get" id="sortForm">
+                        <select name="sortCode" id="sortCode" onchange="submitForm()">
+                            <option value="idDesc" th:selected="${sortCode=='idDesc'}">최근 등록 순</option>
+                            <option value="idAsc" th:selected="${sortCode=='idAsc'}">오래된 등록 순</option>
+                            <option value="hitDesc" th:selected="${sortCode=='hitDesc'}">조회 많은 순</option>
+                            <option value="hitAsc" th:selected="${sortCode=='hitAsc'}">조회 낮은 순</option>
+                            <option value="likesDesc" th:selected="${sortCode=='likesDesc'}">추천 높은 순</option>
+                            <option value="likesAsc" th:selected="${sortCode=='likesAsc'}">추천 낮은 순</option>
+                        </select>
+                    </form>
+                    <script>
+                        function submitForm() {
+                            var sortCode = document.getElementById("sortCode").value;
+                            var kwType = document.getElementById("kwType").value;
+                            var kw = document.getElementsByName("kw")[0].value;
+
+                            var currentUrl = window.location.href;
+                            var newUrl = currentUrl.split("?")[0] + "?sortCode=" + sortCode;
+
+                            if (kwType) {
+                                newUrl += "&kwType=" + kwType;
+                            }
+
+                            if (kw) {
+                                newUrl += "&kw=" + kw;
+                            }
+
+                            window.location.href = newUrl;
+                        }
+                    </script>
                 </div>
+                <nav class="flex items-center justify-center mt-3 mb-3">
+                    <ul class="inline-flex -space-x-px">
+                        <li>
+                            <a th:classappend="${posts.number < 5} ? 'disabled' : ''"
+                               th:if="${posts.number >= 5}"
+                               th:href="@{|/post/list?page=${(posts.number-5) > 0 ? (posts.number-5) : 0}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}"
+                               class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">이전 페이지</a>
+                        </li>
+                        <div th:each="num:${#numbers.sequence(0, posts.totalPages - 1)}" th:if="${num >= (posts.number/5)*5 and num < ((posts.number/5)+1)*5}">
+                            <li>
+                                <a th:if="${num == posts.number}" th:href="@{|?page=${num}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"
+                                   class="bg-blue-50 border border-gray-300 text-blue-600 hover:bg-blue-100 hover:text-blue-700  py-2 px-3 dark:border-gray-700 dark:bg-gray-700 dark:text-white"></a>
+                                <a th:unless="${num == posts.number}" th:href="@{|?page=${num}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}" th:text="${num}+1"
+                                   class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"></a>
+                            </li>
+                        </div>
+
+                        <li>
+                            <a th:classappend="${posts.number + 5 >= posts.totalPages} ? 'disabled' : ''"
+                               th:if="${posts.totalPages > 5 and (posts.number / 5 < (posts.totalPages - 1) / 5)}"
+                               th:href="@{|/post/list?page=${(posts.number / 5 + 1) * 5}&sortCode=${sortCode}&kwType=${kwType}&kw=${kw}|}"
+                               class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">다음 페이지</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

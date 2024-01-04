@@ -38,7 +38,7 @@ public class Rq {
         }
     }
 
-    public String redirect(String url, String msg) {
+    public String redirect(String url, String msg, String... code) {
         String[] urlBits = url.split("#", 2);
         url = urlBits[0];
 
@@ -46,10 +46,31 @@ public class Rq {
         StringBuilder sb = new StringBuilder();
         sb.append("redirect:");
         sb.append(url);
+
+        if (code!=null&&code[0]!=null&&msg!=null){
+            switch (code[0]){
+                case "info":
+                    sb.append("?infoMsg=");
+                    sb.append(msg);
+                    break;
+                case "success":
+                    sb.append("?successMsg=");
+                    sb.append(msg);
+                    break;
+                case "warning":
+                    sb.append("?warningMsg=");
+                    sb.append(msg);
+                    break;
+                case "error":
+                    sb.append("?errorMsg=");
+                    sb.append(msg);
+                    break;
+            }
+        }else {
         if (msg != null) {
             sb.append("?successMsg=");
             sb.append(msg);
-        }
+        }}
         if (urlBits.length == 2) {
             sb.append("#");
             sb.append(urlBits[1]);

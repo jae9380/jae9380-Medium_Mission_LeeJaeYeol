@@ -25,9 +25,12 @@ public class CommentController {
     @PostMapping("/write")
     public String write(@PathVariable long id, @Valid WriteForm writeForm){
         Post post = postService.findById(id).get();
+        if (post.isPaid()&&!rq.getMember().isPaid()){
+            return rq.redirect("/post/"+id,"유료 회원만 댓글 작성이 가능합니다.","info");
+        }
         Comment comment = commentService.write(rq.getMember(),post, writeForm.getBody());
 
-        return rq.redirect("/post/"+id+"#postCmt-"+comment.getId(),"댓글이 등록되었습니다.");
+        return rq.redirect("/post/"+id+"#postCmt-"+comment.getId(),"댓글이 등록되었습니다.","success");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -51,7 +54,7 @@ public class CommentController {
 
         commentService.modifyComment(comment, modifyForm.getBody());
 
-        return rq.redirect("/post/"+id+"#postCmt-"+comment.getId(),"댓글이 수정되었습니다.");
+        return rq.redirect("/post/"+id+"#postCmt-"+comment.getId(),"댓글이 수정되었습니다.","success");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -63,7 +66,7 @@ public class CommentController {
 
         commentService.deleteComment(comment);
 
-        return rq.redirect("/post/"+id,commentId+"번 댓글이 삭제되었습니다.");
+        return rq.redirect("/post/"+id,commentId+"번 댓글이 삭제되었습니다.","success");
     }
 
     @Data

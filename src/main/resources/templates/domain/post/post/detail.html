@@ -26,7 +26,11 @@
                     </div>
                     <div class="text-1xl font-bold tracking-tight text-gray-900">
                         <label>  작성 일시 : </label>
-                        <span th:text="${#temporals.format(post.createDate,'yyyy-MM-dd HH:mm')}"></span>
+                        <span th:text="${#temporals.format(post.createDate,'yyyy.MM.dd/HH:mm')}"></span>
+                    </div>
+                    <div th:unless="${post.createDate==post.modifyDate}" class="text-1xl font-bold tracking-tight text-gray-900">
+                        <label>  수정 일시 : </label>
+                        <span th:text="${#temporals.format(post.modifyDate,'yyyy.MM.dd/HH:mm')}"></span>
                     </div>
                 </div>
             </div>
@@ -77,9 +81,11 @@
             </div>
             <div class="mt-2 mb-2">
                 <form th:action="|/post/${post.id}/comment/write|" method="POST" onsubmit="submitWriteCommentForm(this); return false;">
-                    <textarea name="body" cols="5" rows="3" required maxlength="10000" placeholder="댓글 작성..." ></textarea>
+                    <div th:unless="${@rq.login}" class="flex justify-center mt-4 mb-1 text-l font-bold" >댓글 작성은 로그인 후 이용 가능합니다.</div>
+                    <textarea th:unless="${!@rq.login}" name="body" cols="5" rows="3" required maxlength="10000" placeholder="댓글 작성..." ></textarea>
                     <div class="flex justify-end">
-                        <button class="btn btn-primary "> 등록</button>
+                        <button th:unless="${!@rq.login}" class="btn btn-primary"> 등록</button>
+                        <a th:unless="${@rq.login}" class="btn btn-primary " th:href="|/member/login|"> 로그인 페이지로 이동</a>
                     </div>
                 </form>
                 <script>
