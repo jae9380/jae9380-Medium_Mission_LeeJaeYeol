@@ -23,10 +23,11 @@ public class PostService {
     private final Rq rq;
 
     @Transactional
-    public Post write(Member author, String title, String body, boolean isPublished){
+    public Post write(Member author, String title, String body, boolean isPublished, boolean isPaid){
         Post post = Post.builder()
                 .author(author).title(title)
                 .body(body).isPublished(isPublished)
+                .isPaid(isPaid)
                 .build();
         postRepository.save(post);
 
@@ -38,20 +39,15 @@ public class PostService {
         return postRepository.findTop10ByIsPublishedOrderByIdDesc(isPublished,pageable);
     }
 
-    public Page<Post> search(String kwType, String kw, int page){
+    public Page<Post> search(String kwType, String kw,String sort, int page){
         Pageable pageable = PageRequest.of(page,10);
-        if ("title".equals(kwType)){
-            return postRepository.findByIsPublishedAndTitleContaining(true, kw,pageable);
-        } else if ("body".equals(kwType)) {
-            return postRepository.findByIsPublishedAndBodyContaining(true, kw,pageable);
-        } else if ("authorUsername".equals(kwType)) {
-            Member member=rq.getMember(kw);
-            return postRepository.findByIsPublishedAndAuthor(true,member,pageable);
-        }else if ("titleAndBody".equals(kwType)){
-            return postRepository.findByIsPublishedAndTitleContainingOrBodyContaining(kw,pageable);
-        }else {
-            return postRepository.findByIsPublishedOrderByIdDesc(true, pageable);
-        }
+        return postRepository.search(kwType,kw,sort,pageable);
+    }
+
+    public Page<Post> search(String kwType, String kw,String sort, int page, String username){
+        Member member = rq.getMember(username);
+        Pageable pageable = PageRequest.of(page,10);
+        return postRepository.search(kwType,kw,sort,pageable,member);
     }
 
     public Page<Post> findByAuthor(Member author,int page){
@@ -82,6 +78,7 @@ public class PostService {
     post.setTitle(modifyForm.getTitle());
     post.setBody(modifyForm.getBody());
     post.setPublished(modifyForm.isPublished());
+    post.setPaid(modifyForm.isPaid());
     }
 
     public boolean canDelete(Member member, Post post) {
@@ -97,6 +94,7 @@ public class PostService {
 
     public boolean canLike(Member member, Post post) {
         if (member==null)return false;
+        if (post.isPaid()&&!member.isPaid()) return false;
         return !post.hasLike(member);
     }
 
@@ -113,5 +111,10 @@ public class PostService {
     @Transactional
     public void cancelLike(Member member, Post post) {
         post.deleteLike(member);
+    }
+
+    @Transactional
+    public void increaseHit(Post post) {
+        post.increaseHit();
     }
 }

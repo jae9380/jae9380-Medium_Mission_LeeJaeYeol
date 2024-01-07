@@ -33,6 +33,9 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String body;
     private boolean isPublished;
+    private boolean isPaid;
+    @Setter(AccessLevel.PRIVATE)
+    private long hit;
 
     public void addLike(Member member){
         if(hasLike(member)) return;
@@ -56,5 +59,9 @@ public class Post extends BaseEntity {
                 .body(body).build();
         cmt.add(comment);
         return comment;
+    }
+
+    public void increaseHit() {
+        hit++;
     }
 }

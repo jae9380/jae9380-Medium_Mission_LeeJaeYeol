@@ -23,15 +23,22 @@ public class PostController {
     public String showList(
             @RequestParam(value = "kwType",defaultValue = "")String kwType,
             @RequestParam(defaultValue = "")String kw,
+            @RequestParam(value = "sortCode",defaultValue = "idDesc")String sortCode,
             @RequestParam(value = "page",defaultValue = "0")int page
     ){
+        rq.setAttribute("posts",postService.search(kwType,kw,sortCode,page));
+        rq.setAttribute("sortCode",sortCode);
+        rq.setAttribute("kwType",kwType);
+        rq.setAttribute("kw",kw);
 
-        rq.setAttribute("posts",postService.search(kwType,kw,page));
         return "domain/post/post/list";
     }
 
     @GetMapping("/myList")
     public String showMyList(@RequestParam(value = "page",defaultValue = "0")int page){
+        if (rq.isLogout()){
+            return rq.redirect("/", "로그인 후 이용 가능합니다.","warning");
+        }
         rq.setAttribute("posts",postService.findByAuthor(rq.getMember(),page));
         return "domain/post/post/myList";
     }
@@ -43,9 +50,10 @@ public class PostController {
             if (postService.canModify(rq.getMember(),post)){
                 post=postService.findById(id).get();
             }else {
-             return rq.redirect("/","열람권한이 없습니다.");
+             return rq.redirect("/","열람권한이 없습니다.","warring");
             }
         }
+        postService.increaseHit(post);
             rq.setAttribute("post",post);
         return "domain/post/post/detail";
     }
@@ -60,8 +68,8 @@ public class PostController {
     @PostMapping("/write")
     public String write(@Valid WriteForm writeForm){
         Member member=this.rq.getMember();
-        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished());
-        return rq.redirect("/","%d번 게시글 작성을 완료했습니다.".formatted(post.getId()));
+        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished(),writeForm.isPaid());
+        return rq.redirect("/","%d번 게시글 작성을 완료했습니다.".formatted(post.getId()),"success");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -69,7 +77,7 @@ public class PostController {
     public String showModify(@PathVariable long id){
         Post post=postService.findById(id).get();
 
-        if (!postService.canModify(rq.getMember(),post)) rq.redirect("/","수정 권한이 없습니다.");
+        if (!postService.canModify(rq.getMember(),post)) rq.redirect("/","수정 권한이 없습니다.","warning");
         rq.setAttribute("post",post);
 
         return "domain/post/post/modify";
@@ -81,7 +89,7 @@ public class PostController {
         Post post=postService.findById(id).get();
         if (!postService.canModify(rq.getMember(),post)) throw new RuntimeException("수정권한이 없습니다.");
         postService.modify(post,modifyForm);
-        return rq.redirect("/","%d번 게시물 수정되었습니다.".formatted(id));
+        return rq.redirect("/","%d번 게시물 수정되었습니다.".formatted(id),"success");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -90,7 +98,7 @@ public class PostController {
         Post post = postService.findById(id).get();
         if (!postService.canDelete(rq.getMember(),post))throw new RuntimeException("삭제 권한이 없습니다.");
         postService.delete(post);
-        return rq.redirect("/","%d번 글이 삭제되었습니다.".formatted(id));
+        return rq.redirect("/","%d번 글이 삭제되었습니다.".formatted(id),"success");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -102,7 +110,7 @@ public class PostController {
 
         postService.like(rq.getMember(),post);
 
-        return rq.redirect("/post/"+post.getId(),post.getId()+"번 글 추천했습니다.");
+        return rq.redirect("/post/"+post.getId(),post.getId()+"번 글 추천했습니다.","success");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -114,7 +122,7 @@ public class PostController {
 
         postService.cancelLike(rq.getMember(),post);
 
-        return rq.redirect("/post/"+post.getId(),post.getId()+"번 글 추천 취소했습니다.");
+        return rq.redirect("/post/"+post.getId(),post.getId()+"번 글 추천 취소했습니다.","success");
     }
 
     @Data
@@ -124,6 +132,7 @@ public class PostController {
         @NotBlank
         private String body;
         private boolean published;
+        private boolean paid;
     }
 
     @Data
@@ -133,5 +142,6 @@ public class PostController {
         @NotBlank
         private String body;
         private boolean published;
+        private boolean paid;
     }
 }

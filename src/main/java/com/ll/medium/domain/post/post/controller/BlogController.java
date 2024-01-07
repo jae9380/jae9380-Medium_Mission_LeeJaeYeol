@@ -18,22 +18,30 @@ public class BlogController {
     private final Rq rq;
 
     @GetMapping("/{username}")
-    public String showListByUser(@PathVariable String username, @RequestParam(value = "page",defaultValue = "0")int page){
+    public String showListByUser(@PathVariable String username,
+                                 @RequestParam(value = "page",defaultValue = "0")int page,
+                                 @RequestParam(value = "kwType",defaultValue = "")String kwType,
+                                 @RequestParam(defaultValue = "")String kw,
+                                 @RequestParam(value = "sortCode",defaultValue = "idDesc")String sortCode
+    ){
         rq.getMember(username);
-        rq.setAttribute("posts",postService.findByIsPublishedAndAuthor(true,rq.getMember(username),page
-        ));
+        rq.setAttribute("posts",postService.search(kwType,kw,sortCode,page,username));
+        rq.setAttribute("username",username);
+        rq.setAttribute("sortCode",sortCode);
+        rq.setAttribute("kwType",kwType);
+        rq.setAttribute("kw",kw);
+
         return "domain/post/post/listByMember";
     }
 
     @GetMapping("/{username}/{id}")
     public String showPost( @PathVariable String username, @PathVariable long id){
-
-                Post post = postService.findById(id).get();
+        Post post = postService.findById(id).get();
         if (!post.isPublished()){
             if (postService.canModify(rq.getMember(),post)){
                 post=postService.findById(id).get();
             }else {
-                return rq.redirect("/","열람권한이 없습니다.");
+                return rq.redirect("/","열람권한이 없습니다.","warning");
             }
         }
         rq.setAttribute("post",post);
