@@ -5,10 +5,10 @@
 
 <body>
 <div layout:fragment="content">
-    <th:block th:replace="global/toastUiEditorLib :: toastUiEditorLib"></th:block>
+    <th:block th:replace="global/fragments/toastUiEditorLib :: toastUiEditorLib"></th:block>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="rounded-xl border p-3  shadow-md  bg-white">
-            <form class="space-y-6" th:action method="POST" onsubmit="submitLoginForm(this); return false;">
+            <form class="space-y-6" th:action method="POST" onsubmit="submitEditForm(this); return false;">
                 <input type="hidden" name="body">
                 <input type="hidden" name="_method" value="PUT">
                 <div class=" w-full border-b pb-3">
@@ -26,7 +26,7 @@
                     <div>
                         <div class="mt-2">
                             <div height="calc(100vh - 400px)" placeholder="내용을 입력해주세요." class="toast-ui-editor">
-                                <script type="text/x-template" th:utext="${post.detailBody.val}"></script>
+                                <script type="text/x-template" th:utext="${post.detailBody?.val}"></script>
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                 </div>
             </form>
             <script>
-                function submitLoginForm(form) {
+                function submitEditForm(form) {
                     form.title.value = form.title.value.trim();
                     if (form.title.value.length == 0) {
                         toastWarning('제목을 입력해주세요.');
@@ -78,7 +78,7 @@
                     form.body.value = markdown;
                     if (form.body.value.length == 0) {
                         toastWarning('내용을 입력해주세요.');
-                        form.body.focus();
+                        editor.focus();
                         return;
                     }
 
