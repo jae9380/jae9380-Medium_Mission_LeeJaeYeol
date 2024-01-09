@@ -31,10 +31,8 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Member author;
     private String title;
-    @Column(columnDefinition = "TEXT")
-    private String body;
     @ManyToOne(fetch = LAZY)
-    private PostDetail postDetailBody;
+    private PostDetail detailBody;
     private boolean isPublished;
     private boolean isPaid;
     @Setter(AccessLevel.PRIVATE)

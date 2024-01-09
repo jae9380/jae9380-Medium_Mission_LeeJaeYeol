@@ -29,8 +29,7 @@ public class PostService {
     public Post write(Member author, String title, String body, boolean isPublished, boolean isPaid){
         Post post = Post.builder()
                 .author(author).title(title)
-                .body(body).isPublished(isPublished)
-                .isPaid(isPaid)
+                .isPublished(isPublished).isPaid(isPaid)
                 .build();
         postRepository.save(post);
 
@@ -88,16 +87,15 @@ public class PostService {
     }
 
     private void saveBody(Post post, String body) {
-        post.setBody(body);
-        PostDetail postDetailBody = findDetail(post,"common__body");
-        postDetailBody.setVal(body);
-        post.setPostDetailBody(postDetailBody);
+        PostDetail detailBody = findDetail(post,"common__body");
+        detailBody.setVal(body);
+        post.setDetailBody(detailBody);
     }
 
     private PostDetail findDetail(Post post, String name){
-        Optional<PostDetail> opPOstDetailBody = postDetailRepository.findByPostAndName(post,name);
+        Optional<PostDetail> opDetailBody = postDetailRepository.findByPostAndName(post,name);
 
-        PostDetail postDetailBody = opPOstDetailBody.orElseGet(() -> postDetailRepository.save(
+        PostDetail postDetailBody = opDetailBody.orElseGet(() -> postDetailRepository.save(
                 PostDetail.builder()
                         .post(post).name("common__body").build()
         ));
@@ -112,6 +110,7 @@ public class PostService {
 
     @Transactional
     public void delete(Post post) {
+        postDetailRepository.deleteByPost(post);
         postRepository.delete(post);
     }
 
