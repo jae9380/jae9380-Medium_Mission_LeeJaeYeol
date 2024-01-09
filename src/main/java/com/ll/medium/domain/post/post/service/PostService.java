@@ -74,11 +74,11 @@ public class PostService {
     }
 
     @Transactional
-    public void modify(Post post, PostController.ModifyForm modifyForm) {
-    post.setTitle(modifyForm.getTitle());
-    post.setBody(modifyForm.getBody());
-    post.setPublished(modifyForm.isPublished());
-    post.setPaid(modifyForm.isPaid());
+    public void edit(Post post, PostController.EditForm form) {
+    post.setTitle(form.getTitle());
+    post.setBody(form.getBody());
+    post.setPublished(form.isPublished());
+    post.setPaid(form.isPaid());
     }
 
     public boolean canDelete(Member member, Post post) {
@@ -116,5 +116,10 @@ public class PostService {
     @Transactional
     public void increaseHit(Post post) {
         post.increaseHit();
+    }
+
+    public Post finTempOrMake(Member author) {
+        return postRepository.findByAuthorAndIsPublishedAndTitle(author,false,"임시글")
+        .orElseGet(() -> write(author, "임시글", "", false,false));
     }
 }

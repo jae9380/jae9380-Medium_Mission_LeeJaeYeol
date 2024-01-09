@@ -32,9 +32,9 @@
                         <th style="width: 40%">제목</th>
                         <th>댓글</th>
                         <th>추천</th>
-                        <th>작성일시</th>
+                        <th>작성 일시</th>
+                        <th>수익화</th>
                         <th>공개 범위</th>
-                        <th>비고</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -47,8 +47,8 @@
                         <td th:text="${post.cmt.size}"></td>
                         <td th:text="${post.likes.size}"></td>
                         <td th:text="${#temporals.format(post.createDate,'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${post.isPaid ? '유료' : ''}"></td>
                         <td th:if="${!post.isPublished}" th:text="${!post.isPublished ? '비공개' : '공개'}"></td>
-                        <td th:if="${post.isPaid}" th:text="${post.isPaid ? '유료' : ''}"></td>
                     </tr>
                     </tbody>
                 </table>

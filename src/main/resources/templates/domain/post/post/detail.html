@@ -58,7 +58,7 @@
                         </form>
                     </div>
                     <div class="flex justify-content:flex-end">
-                        <form th:if="${@postService.canModify(@rq.member, post)}" th:action="|/post/${post.id}/modify|">
+                        <form th:if="${@postService.canModify(@rq.member, post)}" th:action="|/post/${post.id}/edit|">
                             <button class="btn btn-primary" type="submit" aria-describedby="submitHelp"> 수정</button>
                         </form>
                         <form th:if="${@postService.canDelete(@rq.member, post)}" th:action="|/post/${post.id}/delete|" method="POST">

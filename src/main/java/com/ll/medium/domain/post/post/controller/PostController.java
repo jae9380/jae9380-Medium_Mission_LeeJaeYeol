@@ -1,6 +1,5 @@
 package com.ll.medium.domain.post.post.controller;
 
-import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
@@ -59,36 +58,29 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/write")
-    public String showWrite(){
-        return "domain/post/post/write";
+    @PostMapping("/makeTemp")
+    public String makeTemp(){
+        Post post = postService.finTempOrMake(rq.getMember());
+        return rq.redirect("/post/%d/edit".formatted(post.getId()),post.getId()+"번 임시글이 생성되었습니다.","success");
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/write")
-    public String write(@Valid WriteForm writeForm){
-        Member member=this.rq.getMember();
-        Post post = postService.write(member,writeForm.getTitle(),writeForm.getBody(), writeForm.isPublished(),writeForm.isPaid());
-        return rq.redirect("/","%d번 게시글 작성을 완료했습니다.".formatted(post.getId()),"success");
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{id}/modify")
-    public String showModify(@PathVariable long id){
-        Post post=postService.findById(id).get();
+    @GetMapping("/{id}/edit")
+    public String showEdit(@PathVariable long id){
+        Post post=postService.findById(id).orElseThrow(()->new RuntimeException("해당 글은 존재하지 않습니다."));
 
         if (!postService.canModify(rq.getMember(),post)) rq.redirect("/","수정 권한이 없습니다.","warning");
         rq.setAttribute("post",post);
 
-        return "domain/post/post/modify";
+        return "domain/post/post/edit";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/{id}/modify")
-    public String modify(@PathVariable long id, @Valid ModifyForm modifyForm){
-        Post post=postService.findById(id).get();
+    @PutMapping("/{id}/edit")
+    public String edit(@PathVariable long id, @Valid PostController.EditForm form){
+        Post post=postService.findById(id).orElseThrow(()->new RuntimeException("해당 글은 존재하지 않습니다."));
         if (!postService.canModify(rq.getMember(),post)) throw new RuntimeException("수정권한이 없습니다.");
-        postService.modify(post,modifyForm);
+        postService.edit(post,form);
         return rq.redirect("/","%d번 게시물 수정되었습니다.".formatted(id),"success");
     }
 
@@ -126,17 +118,7 @@ public class PostController {
     }
 
     @Data
-    public static class WriteForm{
-        @NotBlank
-        private String title;
-        @NotBlank
-        private String body;
-        private boolean published;
-        private boolean paid;
-    }
-
-    @Data
-    public static class ModifyForm {
+    public static class EditForm {
         @NotBlank
         private String title;
         @NotBlank

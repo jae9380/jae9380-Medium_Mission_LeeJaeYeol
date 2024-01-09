@@ -19,4 +19,5 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     Page<Post> findByIsPublished(boolean isPublished, Pageable pageable);
 
+    Optional<Post> findByAuthorAndIsPublishedAndTitle(Member author, boolean isPublished, String 임시글);
 }

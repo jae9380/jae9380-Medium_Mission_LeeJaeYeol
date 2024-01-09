@@ -42,7 +42,9 @@
                             <a href="/member/join" sec:authorize="isAnonymous()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">회원가입</a>
                             <a href="/member/login" sec:authorize="isAnonymous()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">로그인</a>
                             <a href="/post/list" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">글 목록</a>
-                            <a href="/post/write" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">글 작성</a>
+                            <form method="post" th:action="@{/post/makeTemp}" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
+                                <button type="submit">글 작성</button>
+                            </form>
                             <a href="/post/myList" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">내가 작성한 글</a>
                             <a href="/member/logout" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">로그아웃</a>
                         </div>
@@ -63,7 +65,9 @@
                 <a href="/member/join" sec:authorize="isAnonymous()" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">회원가입</a>
                 <a href="/member/login" sec:authorize="isAnonymous()" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">로그인</a>
                 <a href="/post/list" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">글 목록</a>
-                <a href="/post/write" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">글 작성</a>
+                <form method="post" th:action="@{/post/makeTemp}" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
+                    <button type="submit">글 작성</button>
+                </form>
                 <a href="/post/myList" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">내가 작성한 글</a>
                 <a href="/member/logout" sec:authorize="isAuthenticated()" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">로그아웃</a>
             </div>
