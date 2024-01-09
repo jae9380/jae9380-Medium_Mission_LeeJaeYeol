@@ -41,7 +41,7 @@
                     <div th:unless="${!@rq.login}">
                         <div  th:if="${!@rq.getMember().isPaid()}" class="flex justify-center mt-3 mb-2 text-l font-bold" >해당 글 열람은 유료 회원만 가능합니다.</div>
                         <div th:if="${@rq.getMember().isPaid()}" class="toast-ui-viewer">
-                            <script type="text/x-template" th:utext="${post.body}"></script>
+                            <script type="text/x-template" th:utext="${post.postDetailBody.val}"></script>
                         </div>
                     </div>
                 </div>

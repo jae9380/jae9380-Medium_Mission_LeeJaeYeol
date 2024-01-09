@@ -3,6 +3,8 @@ package com.ll.medium.domain.post.post.service;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.controller.PostController;
 import com.ll.medium.domain.post.post.entity.Post;
+import com.ll.medium.domain.post.post.entity.PostDetail;
+import com.ll.medium.domain.post.post.repository.PostDetailRepository;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import com.ll.medium.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
+    private final PostDetailRepository postDetailRepository;
     private final Rq rq;
 
     @Transactional
@@ -30,6 +33,8 @@ public class PostService {
                 .isPaid(isPaid)
                 .build();
         postRepository.save(post);
+
+        saveBody(post, body);
 
         return post;
     }
@@ -76,9 +81,27 @@ public class PostService {
     @Transactional
     public void edit(Post post, PostController.EditForm form) {
     post.setTitle(form.getTitle());
-    post.setBody(form.getBody());
     post.setPublished(form.isPublished());
     post.setPaid(form.isPaid());
+
+    saveBody(post, form.getBody());
+    }
+
+    private void saveBody(Post post, String body) {
+        post.setBody(body);
+        PostDetail postDetailBody = findDetail(post,"common__body");
+        postDetailBody.setVal(body);
+        post.setPostDetailBody(postDetailBody);
+    }
+
+    private PostDetail findDetail(Post post, String name){
+        Optional<PostDetail> opPOstDetailBody = postDetailRepository.findByPostAndName(post,name);
+
+        PostDetail postDetailBody = opPOstDetailBody.orElseGet(() -> postDetailRepository.save(
+                PostDetail.builder()
+                        .post(post).name("common__body").build()
+        ));
+        return postDetailBody;
     }
 
     public boolean canDelete(Member member, Post post) {

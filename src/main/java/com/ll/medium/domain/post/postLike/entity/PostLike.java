@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -18,8 +19,8 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor(access = PROTECTED)
 @Getter
 public class PostLike extends IdEntity {
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     private Post post;
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     private Member member;
 }
