@@ -4,6 +4,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <th:block th:replace="global/toastUiEditorLib :: toastUiEditorLib"></th:block>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="rounded-xl border p-3  shadow-md  bg-white">
             <div class="flex w-full items-center justify-between border-b pb-3">
@@ -39,7 +40,9 @@
                     <div th:unless="${@rq.login}" class="flex justify-center mt-3 mb-2 text-l font-bold" >해당 글 열람은 로그인 후 이용이 가능합니다.</div>
                     <div th:unless="${!@rq.login}">
                         <div  th:if="${!@rq.getMember().isPaid()}" class="flex justify-center mt-3 mb-2 text-l font-bold" >해당 글 열람은 유료 회원만 가능합니다.</div>
-                        <div  th:if="${@rq.getMember().isPaid()}"class="mb-3 text-l " th:text="${post.body}"></div>
+                        <div th:if="${@rq.getMember().isPaid()}" class="toast-ui-viewer">
+                            <script type="text/x-template" th:utext="${post.body}"></script>
+                        </div>
                     </div>
                 </div>
                 <div th:unless="${post.isPaid}" th:text="${post.body}" class="mb-3 text-l "></div>
