@@ -142,4 +142,8 @@ public class Rq {
         member=memberService.findByUsername(username).get();
         return member;
     }
+
+    public String getProfileImgUrl() {
+        return memberService.getProfileImgUrl(getMember());
+    }
 }
