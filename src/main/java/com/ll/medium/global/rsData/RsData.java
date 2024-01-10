@@ -13,7 +13,7 @@ public class RsData<T> {
     String resultCode;
     int statusCode;
     String msg;
-    T dat;
+    T data;
 
     public static <T> RsData<T> of(String resultCode, String msg){
         return of(resultCode,msg,null);

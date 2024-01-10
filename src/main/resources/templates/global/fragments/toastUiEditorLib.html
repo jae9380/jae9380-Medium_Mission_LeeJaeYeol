@@ -382,13 +382,15 @@
                     },
                     hooks: {
                         addImageBlobHook: function (blob, callback) {
+                            console.log("aaa")
                             const csrfToken = $("meta[name='_csrf']").attr("content");
                             const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
                             const formData = new FormData();
+                            formData.append('refererUrl', location.pathname + location.search);
                             formData.append('file', blob);
 
-                            fetch('/genFile/temp', {
+                            fetch('/genFile/upload', {
                                 method: 'POST',
                                 headers: {
                                     'Accept': 'application/json',
@@ -396,14 +398,16 @@
                                 },
                                 body: formData
                             }).then(function (response) {
+                                console.log("bbb")
                                 return response.json();
                             }).then(function (myJson) {
-                                callback(myJson.data + "?type=temp");
+                                console.log("ccc")
+                                callback(myJson.data);
                             });
                         }
                     },
                     placeholder: $node.attr('placeholder') ?? "Please enter text.",
-                    autofocus: $node.attr('autofocus') == 'autofocus',
+                    autofocus: $node.attr('autofocus') === 'autofocus',
                     plugins: [
                         [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
                         [toastui.Editor.plugin.codeSyntaxHighlight, {highlighter: Prism}],

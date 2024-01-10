@@ -1,5 +1,7 @@
 package com.ll.medium.domain.post.post.service;
 
+import com.ll.medium.domain.base.genFile.entity.GenFile;
+import com.ll.medium.domain.base.genFile.service.GenFileService;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.controller.PostController;
 import com.ll.medium.domain.post.post.entity.Post;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostDetailRepository postDetailRepository;
     private final Rq rq;
+    private final GenFileService genFileService;
 
     @Transactional
     public Post write(Member author, String title, String body, boolean isPublished, boolean isPaid){
@@ -108,8 +112,13 @@ public class PostService {
         return post.getAuthor().equals(member);
     }
 
+    private List<GenFile> findGenFiles(Post post) {
+        return genFileService.findByRelId(post.getModelName(), post.getId());
+    }
+
     @Transactional
     public void delete(Post post) {
+        findGenFiles(post).forEach(genFileService::remove);
         postDetailRepository.deleteByPost(post);
         postRepository.delete(post);
     }
