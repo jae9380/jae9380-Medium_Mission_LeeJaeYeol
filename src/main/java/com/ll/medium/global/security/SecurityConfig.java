@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .csrf(
                         csrf ->
                                 csrf.ignoringRequestMatchers(
-                                        "/h2-console/**"
+                                        "/h2-console/**","/genFile/**"
                                 )
                 ).formLogin(
                         formLogin -> formLogin

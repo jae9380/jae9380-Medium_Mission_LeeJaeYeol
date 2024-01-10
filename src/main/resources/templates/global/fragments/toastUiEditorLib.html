@@ -382,7 +382,6 @@
                     },
                     hooks: {
                         addImageBlobHook: function (blob, callback) {
-                            console.log("aaa")
                             const csrfToken = $("meta[name='_csrf']").attr("content");
                             const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
@@ -398,10 +397,8 @@
                                 },
                                 body: formData
                             }).then(function (response) {
-                                console.log("bbb")
                                 return response.json();
                             }).then(function (myJson) {
-                                console.log("ccc")
                                 callback(myJson.data);
                             });
                         }
