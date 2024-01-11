@@ -65,4 +65,10 @@ public class Post extends BaseEntity {
     public void increaseHit() {
         hit++;
     }
+
+    public String getBodyForEditor() {
+        return getDetailBody()
+                .getVal()
+                .replaceAll("(?i)(</?)script", "$1t-script");
+    }
 }
