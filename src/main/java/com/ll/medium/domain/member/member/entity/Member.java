@@ -21,6 +21,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
+@ToString(callSuper = true)
 public class Member extends BaseEntity {
     private String username,password;
     @OneToMany(cascade = CascadeType.REMOVE)
