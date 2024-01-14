@@ -1,2 +1,2 @@
-https://www.youtube.com/watch?v=QbhSVCPgwok
-23강
+35강
+https://www.youtube.com/watch?v=ODmjVFKkkuU

@@ -21,11 +21,13 @@
 <script>
     const urlParams = getUrlParams(location.href);
 </script>
-<body>
+<body class="min-h-[100dvh] flex flex-col">
 
 <th:block layout:fragment="header"></th:block>
 <link rel="stylesheet" href="/resource/global/global.css">
-<th:block layout:fragment="content"></th:block>
+<main class="flex-1">
+    <th:block layout:fragment="content"></th:block>
+</main>
 <script>
     $(window).bind("pageshow", function (event) {
         if (sessionStorage.getItem("historyBackErrorMsg")) {
@@ -46,5 +48,8 @@
         toastError(urlParams.errorMsg);
     }
 </script>
+<footer>
+    <h4 class="flex justify-center">MEDIUM CLONE.</h4>
+</footer>
 </body>
 </html>
