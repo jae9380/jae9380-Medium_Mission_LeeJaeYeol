@@ -1,2 +1,2 @@
-35강
-https://www.youtube.com/watch?v=ODmjVFKkkuU
+43강
+https://www.youtube.com/watch?v=lLc6K7cJFJU
